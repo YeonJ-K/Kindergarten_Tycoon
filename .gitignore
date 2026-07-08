@@ -580,3 +580,11 @@ sysinfo.txt
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # End of https://www.toptal.com/developers/gitignore/api/unity,csharp,android,rider
+
+#Exception
+!Assets/01. Scripts/*
+!Assets/02. Animator/*
+!Assets/03. Prefabs/*
+!Assets/97. EventScripts/*
+!Assets/98. DataSheet/*
+!Assets/100. Package/*
