@@ -50,6 +50,49 @@ public class GridMap : MonoBehaviour
                     cells[x, y].zone = z.type;
     }   
     
+    // 특정 구역(ZoneType)이 차지하는 칸 범위를 구한다
+    // 반환: 최소~최대 칸 좌표. 해당 구역이 없으면 found=false
+    public bool GetZoneBounds(ZoneType zone, out Vector2Int min, out Vector2Int max)
+    {
+        min = new Vector2Int(int.MaxValue, int.MaxValue);
+        max = new Vector2Int(int.MinValue, int.MinValue);
+        bool found = false;
+ 
+        for (int x = 0; x < mapWidth; x++)
+        for (int y = 0; y < mapHeight; y++)
+        {
+            if (cells[x, y].zone != zone) continue;
+            found = true;
+            min.x = Mathf.Min(min.x, x);
+            min.y = Mathf.Min(min.y, y);
+            max.x = Mathf.Max(max.x, x);
+            max.y = Mathf.Max(max.y, y);
+        }
+        return found;
+    }
+ 
+    // 특정 구역의 월드 중심 좌표
+    public Vector3 GetZoneCenter(ZoneType zone)
+    {
+        if (!GetZoneBounds(zone, out var min, out var max))
+            return WorldCenter;  // 없으면 맵 전체 중심
+ 
+        float cx = (min.x + max.x + 1) / 2f * cellSize;
+        float cy = (min.y + max.y + 1) / 2f * cellSize;
+        return transform.position + new Vector3(cx, cy, 0);
+    }
+ 
+    // 특정 구역의 월드 크기 (가로, 세로 유닛)
+    public Vector2 GetZoneSize(ZoneType zone)
+    {
+        if (!GetZoneBounds(zone, out var min, out var max))
+            return new Vector2(WorldWidth, WorldHeight);
+ 
+        float w = (max.x - min.x + 1) * cellSize;
+        float h = (max.y - min.y + 1) * cellSize;
+        return new Vector2(w, h);
+    }
+    
     public Vector3 GridToWorld(int x, int y)
      => new Vector3(x * cellSize + cellSize / 2f, y * cellSize + cellSize / 2f, 0f);
     public Vector2Int WorldToGrid(Vector3 world)

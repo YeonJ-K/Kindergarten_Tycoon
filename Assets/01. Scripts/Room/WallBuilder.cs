@@ -3,26 +3,17 @@ using UnityEngine;
 using Infos;
 
 // ────────────────────────────────────────────────────────────
-// 스프라이트 직접 생성 방식 벽 빌더
+// 스캔 방식 벽 빌더 (가로/세로/하단 완성)
 //
-// 원리:
-//  - 각 "벽 칸"(방 가장자리 칸)이 상하좌우 경계 상태를 보고 조각을 고른다.
-//  - 각 방향의 상태는 3가지: OUTSIDE(바깥) / OTHER(다른 방) / SAME(같은 방=내부)
-//  - 방-방 경계(OTHER)에는 공유벽/ T자를 써서 한 겹으로 합친다.
-//  - Tilemap 대신 SpriteRenderer 프리팹을 Instantiate로 배치.
+// 순서:
+//  1. 바깥 테두리 (top/bottom/left/right + 코너)
+//  2. 세로 방 경계벽 (중앙 기준 좌우 분리)
+//     - 왼쪽: (x,y)≠(x+1,y) → 왼쪽칸. 위끝 LeftTop/MiddleRightMiddle, 몸통 MiddleRight
+//     - 오른쪽: (x,y)≠(x-1,y) → 오른쪽칸. 위끝 RightTop/MiddleLeftMiddle, 몸통 MiddleLeft
+//  3. 가로 방 경계벽 (LeftTop-Middle2-RightTop 스캔)
+//     - 세로벽이 이미 있는 칸(교차점)은 덮지 않음
+//  4. 하단 경계 + 중복 제거
 // ────────────────────────────────────────────────────────────
-
-public enum EdgeState { Same, Other, Outside }
-// Same   = 같은 방 (내부, 벽 없음)
-// Other  = 다른 방 (경계, 공유벽/T자)
-// Outside= 바깥 (테두리, top/bottom/left/right)
-
-public class WallCellInfo
-{
-    public Vector2Int cell;
-    public EdgeState up, down, left, right;
-    public WallPiece piece = WallPiece.None;
-}
 
 [System.Serializable]
 public class WallPieceSprite
@@ -35,7 +26,7 @@ public class WallBuilder : MonoBehaviour
 {
     [Header("참조")]
     public GridMap map;
-    public Transform wallParent;         // 벽 스프라이트들이 담길 부모 (없으면 자동 생성)
+    public Transform wallParent;
 
     [Header("벽 조각 스프라이트")]
     public WallPieceSprite[] pieces;
@@ -44,9 +35,9 @@ public class WallBuilder : MonoBehaviour
 
     [Header("옵션")]
     public bool buildOnStart = true;
-    public bool showDebugLabels = true;  // Scene 뷰에 조각 이름 표시
+    public bool showDebugLabels = true;
 
-    Dictionary<Vector2Int, WallCellInfo> walls = new();
+    Dictionary<Vector2Int, WallPiece> placed = new();
 
     void Start()
     {
@@ -57,10 +48,9 @@ public class WallBuilder : MonoBehaviour
     {
         if (map == null || map.cells == null)
         {
-            Debug.LogWarning("[WallBuilder] GridMap 준비 안 됨. BuildGrid() 이후 호출하세요.");
+            Debug.LogWarning("[WallBuilder] GridMap 준비 안 됨.");
             return;
         }
-
         if (wallParent == null)
         {
             var go = new GameObject("Walls");
@@ -68,141 +58,177 @@ public class WallBuilder : MonoBehaviour
             wallParent = go.transform;
         }
 
-        walls = Analyze();
+        placed.Clear();
+        BuildBorder();
+        BuildVertical();
+        BuildHorizontal();
+        BuildBottom();
         Draw();
     }
 
-    // ────────────────────────────────────────────────
-    // 1단계: 각 벽 칸의 상하좌우 경계 상태 분석
-    // ────────────────────────────────────────────────
-    Dictionary<Vector2Int, WallCellInfo> Analyze()
+    bool IsRoom(int x, int y)
     {
-        var result = new Dictionary<Vector2Int, WallCellInfo>();
+        if (!map.InBounds(x, y)) return false;
+        return map.cells[x, y].zone != ZoneType.None;
+    }
+    ZoneType Zone(int x, int y)
+    {
+        if (!map.InBounds(x, y)) return ZoneType.None;
+        return map.cells[x, y].zone;
+    }
+    bool SameRoom(int ax, int ay, int bx, int by)
+    {
+        var za = Zone(ax, ay); var zb = Zone(bx, by);
+        if (za == ZoneType.None || zb == ZoneType.None) return false;
+        return za == zb;
+    }
+    bool Has(Vector2Int c) => placed.ContainsKey(c);
+    void Put(Vector2Int c, WallPiece p) => placed[c] = p;
 
+    // 세로벽 조각인지 (가로벽이 덮으면 안 되는 교차점 판별)
+    bool IsVerticalPiece(WallPiece p)
+    {
+        return p == WallPiece.MiddleRight || p == WallPiece.MiddleLeft
+            || p == WallPiece.MiddleRightMiddle || p == WallPiece.MiddleLeftMiddle
+            || p == WallPiece.LeftTop || p == WallPiece.RightTop;
+    }
+
+    // ── 1. 바깥 테두리 ──
+    void BuildBorder()
+    {
         for (int x = 0; x < map.mapWidth; x++)
         for (int y = 0; y < map.mapHeight; y++)
         {
-            ZoneType myZone = map.cells[x, y].zone;
-            if (myZone == ZoneType.None) continue;  // 방 칸만
+            if (!IsRoom(x, y)) continue;
+            bool oU = !IsRoom(x, y + 1);
+            bool oD = !IsRoom(x, y - 1);
+            bool oL = !IsRoom(x - 1, y);
+            bool oR = !IsRoom(x + 1, y);
+            if (!oU && !oD && !oL && !oR) continue;
 
-            var info = new WallCellInfo
-            {
-                cell = new Vector2Int(x, y),
-                up    = GetEdge(myZone, x, y + 1),
-                down  = GetEdge(myZone, x, y - 1),
-                left  = GetEdge(myZone, x - 1, y),
-                right = GetEdge(myZone, x + 1, y),
-            };
-
-            // 사방이 다 같은 방이면 내부 칸 → 벽 아님
-            if (info.up == EdgeState.Same && info.down == EdgeState.Same &&
-                info.left == EdgeState.Same && info.right == EdgeState.Same)
-                continue;
-
-            info.piece = SelectPiece(info);
-            result[info.cell] = info;
+            var c = new Vector2Int(x, y);
+            WallPiece p = WallPiece.None;
+            if (oU && oL) p = WallPiece.TopCornerLeft;
+            else if (oU && oR) p = WallPiece.TopCornerRight;
+            else if (oD && oL) p = WallPiece.BottomCornerLeft;
+            else if (oD && oR) p = WallPiece.BottomCornerRight;
+            else if (oU) p = WallPiece.Top;
+            else if (oD) p = WallPiece.Bottom;
+            else if (oL) p = WallPiece.Left;
+            else if (oR) p = WallPiece.Right;
+            if (p != WallPiece.None) placed[c] = p;
         }
-
-        return result;
     }
 
-    // 내 방 기준으로 이웃 칸의 상태 판정
-    EdgeState GetEdge(ZoneType myZone, int nx, int ny)
+    // ── 2. 세로 방 경계벽 ──
+    void BuildVertical()
     {
-        if (!map.InBounds(nx, ny)) return EdgeState.Outside;    // 맵 밖 = 바깥
-        ZoneType nz = map.cells[nx, ny].zone;
-        if (nz == ZoneType.None) return EdgeState.Outside;      // 빈 칸 = 바깥
-        if (nz == myZone) return EdgeState.Same;                // 같은 방
-        return EdgeState.Other;                                  // 다른 방
+        int midX = map.mapWidth / 2;
+
+        // 왼쪽 절반
+        for (int x = 0; x < midX; x++)
+        {
+            bool active = false;
+            for (int y = map.mapHeight - 1; y >= 0; y--)
+            {
+                bool boundary = IsRoom(x, y) && IsRoom(x + 1, y) && !SameRoom(x, y, x + 1, y);
+                if (boundary)
+                {
+                    var c = new Vector2Int(x, y);
+                    if (!active) { Put(c, WallPiece.MiddleRightMiddle); active = true; }
+                    else Put(c, WallPiece.MiddleRight);
+                }
+                else active = false;
+            }
+        }
+
+        // 오른쪽 절반
+        for (int x = midX; x < map.mapWidth; x++)
+        {
+            bool active = false;
+            for (int y = map.mapHeight - 1; y >= 0; y--)
+            {
+                bool boundary = IsRoom(x, y) && IsRoom(x - 1, y) && !SameRoom(x, y, x - 1, y);
+                if (boundary)
+                {
+                    var c = new Vector2Int(x, y);
+                    if (!active) { Put(c, WallPiece.MiddleLeftMiddle); active = true; }
+                    else Put(c, WallPiece.MiddleLeft);
+                }
+                else active = false;
+            }
+        }
     }
 
-    // ────────────────────────────────────────────────
-    // 2단계: 조각 선택
-    //  "벽이 필요한 방향" = 바깥(Outside)이거나 다른 방(Other)인 방향
-    //  그 방향들의 조합으로 조각을 고른다.
-    // ────────────────────────────────────────────────
-    WallPiece SelectPiece(WallCellInfo w)
+    // ── 3. 가로 방 경계벽 (LeftTop - Middle2 - RightTop) ──
+    void BuildHorizontal()
     {
-        // 벽이 필요한 방향(테두리 or 경계)
-        bool wU = w.up    != EdgeState.Same;
-        bool wD = w.down  != EdgeState.Same;
-        bool wL = w.left  != EdgeState.Same;
-        bool wR = w.right != EdgeState.Same;
-
-        int count = (wU?1:0)+(wD?1:0)+(wL?1:0)+(wR?1:0);
-
-        // ── 4방향: 십자 ──
-        if (count == 4) return WallPiece.MiddleCross;
-
-        // ── 3방향: T자 ──
-        if (count == 3)
+        // 각 가로 경계선: (x,y)와 (x,y+1) 방이 다른 줄
+        for (int y = 0; y < map.mapHeight - 1; y++)
         {
-            // 막힌(Same) 방향 기준으로 T자 종류 결정
-            if (!wD) return WallPiece.MiddleComboUp;    // 아래가 내부 → ┴
-            if (!wU) return WallPiece.MiddleComboDown;  // 위가 내부 → ┬
-            if (!wR) return WallPiece.MiddleComboLeft;  // 오른쪽 내부 → ┤
-            if (!wL) return WallPiece.MiddleComboRight; // 왼쪽 내부 → ├
-        }
-
-        // ── 2방향 ──
-        if (count == 2)
-        {
-            // 마주보는 방향 = 직선
-            if (wL && wR)  // 가로 직선
+            // 이 y줄에서 가로 경계가 있는 구간을 왼→오로 스캔
+            for (int x = 0; x < map.mapWidth; x++)
             {
-                // 위가 바깥이면 top, 아래가 바깥이면 bottom, 둘 다 방이면 middle2(공유)
-                if (w.up == EdgeState.Outside)   return WallPiece.Top;
-                if (w.down == EdgeState.Outside) return WallPiece.Bottom;
-                return WallPiece.Middle2;
+                bool boundary = IsRoom(x, y) && IsRoom(x, y + 1) && !SameRoom(x, y, x, y + 1);
+                if (!boundary) continue;
+
+                var c = new Vector2Int(x, y);
+
+                // 교차점: 세로벽 조각이 이미 있으면 덮지 않음
+                if (Has(c) && IsVerticalPiece(placed[c])) continue;
+
+                // 왼쪽 끝인가 (왼쪽이 바깥이거나 경계 아님) → LeftTop
+                bool leftEnd = !(IsRoom(x - 1, y) && IsRoom(x - 1, y + 1) && !SameRoom(x - 1, y, x - 1, y + 1));
+                // 오른쪽 끝인가 → RightTop
+                bool rightEnd = !(IsRoom(x + 1, y) && IsRoom(x + 1, y + 1) && !SameRoom(x + 1, y, x + 1, y + 1));
+
+                // 왼쪽 테두리에 닿은 시작점
+                bool touchLeftBorder = !IsRoom(x - 1, y) || !IsRoom(x - 1, y + 1);
+                bool touchRightBorder = !IsRoom(x + 1, y) || !IsRoom(x + 1, y + 1);
+
+                if (leftEnd && touchLeftBorder) Put(c, WallPiece.LeftTop);
+                else if (rightEnd && touchRightBorder) Put(c, WallPiece.RightTop);
+                else Put(c, WallPiece.Middle2);
             }
-            if (wU && wD)  // 세로 직선
-            {
-                if (w.left == EdgeState.Outside)  return WallPiece.Left;
-                if (w.right == EdgeState.Outside) return WallPiece.Right;
-                return WallPiece.Middle;
-            }
-
-            // 직각 = 코너 (뻗는 두 방향 = 조각 이름, 픽셀 분석 확정)
-            if (wU && wL) return WallPiece.TopLeft;
-            if (wU && wR) return WallPiece.TopRight;
-            if (wD && wL) return WallPiece.BottomLeft;
-            if (wD && wR) return WallPiece.BottomRight;
         }
-
-        // ── 1방향: 끝(외톨이 테두리) ──
-        if (count == 1)
-        {
-            // 그 방향이 바깥이면 그쪽 테두리 조각
-            if (wU) return w.up == EdgeState.Outside ? WallPiece.Bottom : WallPiece.Middle2;
-            if (wD) return w.down == EdgeState.Outside ? WallPiece.Top : WallPiece.Middle2;
-            if (wL) return w.left == EdgeState.Outside ? WallPiece.Right : WallPiece.Middle;
-            if (wR) return w.right == EdgeState.Outside ? WallPiece.Left : WallPiece.Middle;
-        }
-
-        return WallPiece.None;
     }
 
-    // ────────────────────────────────────────────────
-    // 3단계: 스프라이트 배치
-    // ────────────────────────────────────────────────
+    // ── 4. 하단 경계 (중앙 기준 좌우 분리로 한 겹 보장) ──
+    void BuildBottom()
+    {
+        int y = 0;
+        int midX = map.mapWidth / 2;
+
+        // 왼쪽 절반: (x,0)≠(x+1,0) → 왼쪽칸 BottomRightMiddle
+        for (int x = 0; x < midX; x++)
+        {
+            if (IsRoom(x, y) && IsRoom(x + 1, y) && !SameRoom(x, y, x + 1, y))
+                Put(new Vector2Int(x, y), WallPiece.BottomRightMiddle);
+        }
+
+        // 오른쪽 절반: (x,0)≠(x-1,0) → 오른쪽칸 BottomLeftMiddle
+        for (int x = midX; x < map.mapWidth; x++)
+        {
+            if (IsRoom(x, y) && IsRoom(x - 1, y) && !SameRoom(x, y, x - 1, y))
+                Put(new Vector2Int(x, y), WallPiece.BottomLeftMiddle);
+        }
+    }
+
+    // ── 배치 ──
     void Draw()
     {
         ClearWalls();
-
-        foreach (var kv in walls)
+        foreach (var kv in placed)
         {
-            var info = kv.Value;
-            Sprite sp = GetSprite(info.piece);
+            Sprite sp = GetSprite(kv.Value);
             if (sp == null)
             {
-                Debug.LogWarning($"[WallBuilder] {info.cell}: 조각 {info.piece} 스프라이트 미연결");
+                Debug.LogWarning($"[WallBuilder] {kv.Key}: 조각 {kv.Value} 미연결");
                 continue;
             }
-
-            var go = new GameObject($"Wall_{info.cell.x}_{info.cell.y}_{info.piece}");
+            var go = new GameObject($"Wall_{kv.Key.x}_{kv.Key.y}_{kv.Value}");
             go.transform.SetParent(wallParent);
-            go.transform.position = map.GridToWorld(info.cell.x, info.cell.y);
-
+            go.transform.position = map.GridToWorld(kv.Key.x, kv.Key.y);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = sp;
             sr.sortingOrder = sortingOrder;
@@ -216,10 +242,8 @@ public class WallBuilder : MonoBehaviour
         if (wallParent == null) return;
         for (int i = wallParent.childCount - 1; i >= 0; i--)
         {
-            if (Application.isPlaying)
-                Destroy(wallParent.GetChild(i).gameObject);
-            else
-                DestroyImmediate(wallParent.GetChild(i).gameObject);
+            if (Application.isPlaying) Destroy(wallParent.GetChild(i).gameObject);
+            else DestroyImmediate(wallParent.GetChild(i).gameObject);
         }
     }
 
@@ -230,21 +254,17 @@ public class WallBuilder : MonoBehaviour
         return null;
     }
 
-    // ────────────────────────────────────────────────
-    // 디버그: Scene 뷰에 각 벽 칸의 선택 조각 이름 표시
-    // ────────────────────────────────────────────────
     void OnDrawGizmos()
     {
-        if (!showDebugLabels || walls == null || walls.Count == 0 || map == null) return;
-
+        if (!showDebugLabels || placed == null || placed.Count == 0 || map == null) return;
 #if UNITY_EDITOR
         var style = new GUIStyle();
         style.normal.textColor = Color.yellow;
-        style.fontSize = 9;
-        foreach (var kv in walls)
+        style.fontSize = 8;
+        foreach (var kv in placed)
         {
             Vector3 pos = map.GridToWorld(kv.Key.x, kv.Key.y);
-            UnityEditor.Handles.Label(pos, kv.Value.piece.ToString(), style);
+            UnityEditor.Handles.Label(pos, kv.Value.ToString(), style);
         }
 #endif
     }

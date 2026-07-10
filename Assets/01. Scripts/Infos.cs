@@ -25,11 +25,22 @@ namespace Infos
     public enum WallPiece
     {
         None,
+            
+        // 바깥 테두리 직선
         Top, Bottom, Left, Right,
-        Middle, Middle2,
-        TopLeft, TopRight, BottomLeft, BottomRight,
-        Top3way, Bottom3way, Left3way, Right3way,
-        MiddleCross,
-        MiddleComboUp, MiddleComboDown, MiddleComboLeft, MiddleComboRight,
+        // 바깥 테두리 코너
+        TopCornerLeft, TopCornerRight, BottomCornerLeft, BottomCornerRight,
+        
+        // 공유 중간 벽
+        MiddleLeft, MiddleRight, Middle2,
+        
+        // 위쪽 테두리에서 세로 중간벽 갈라짐
+        LeftTop, RightTop,
+        
+        // 아래쪽 테두리에서 세로 중간벽 갈라짐
+        BottomLeftMiddle, BottomRightMiddle,
+        
+        // 가로 중간벽 + 세로 중간벽 T자
+        MiddleLeftMiddle, MiddleRightMiddle,
     }
 }
