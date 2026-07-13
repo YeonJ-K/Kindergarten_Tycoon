@@ -25,7 +25,6 @@ public class WallPieceSprite
 public class WallBuilder : MonoBehaviour
 {
     [Header("참조")]
-    public GridMap map;
     public Transform wallParent;
 
     [Header("벽 조각 스프라이트")]
@@ -46,11 +45,6 @@ public class WallBuilder : MonoBehaviour
 
     public void BuildWalls()
     {
-        if (map == null || map.cells == null)
-        {
-            Debug.LogWarning("[WallBuilder] GridMap 준비 안 됨.");
-            return;
-        }
         if (wallParent == null)
         {
             var go = new GameObject("Walls");
@@ -68,13 +62,15 @@ public class WallBuilder : MonoBehaviour
 
     bool IsRoom(int x, int y)
     {
-        if (!map.InBounds(x, y)) return false;
-        return map.cells[x, y].zone != ZoneType.None;
+        var cell = GridMap.instance.GetCell(x, y);
+        if (cell == null ) return false;
+        return cell.zone != ZoneType.None;
     }
     ZoneType Zone(int x, int y)
     {
-        if (!map.InBounds(x, y)) return ZoneType.None;
-        return map.cells[x, y].zone;
+        var cell = GridMap.instance.GetCell(x, y);
+        if (cell == null) return ZoneType.None;
+        return cell.zone;
     }
     bool SameRoom(int ax, int ay, int bx, int by)
     {
@@ -96,8 +92,8 @@ public class WallBuilder : MonoBehaviour
     // ── 1. 바깥 테두리 ──
     void BuildBorder()
     {
-        for (int x = 0; x < map.mapWidth; x++)
-        for (int y = 0; y < map.mapHeight; y++)
+        for (int x = 0; x < GridMap.instance.mapWidth; x++)
+        for (int y = 0; y < GridMap.instance.mapHeight; y++)
         {
             if (!IsRoom(x, y)) continue;
             bool oU = !IsRoom(x, y + 1);
@@ -123,13 +119,13 @@ public class WallBuilder : MonoBehaviour
     // ── 2. 세로 방 경계벽 ──
     void BuildVertical()
     {
-        int midX = map.mapWidth / 2;
+        int midX = GridMap.instance.mapWidth / 2;
 
         // 왼쪽 절반
         for (int x = 0; x < midX; x++)
         {
             bool active = false;
-            for (int y = map.mapHeight - 1; y >= 0; y--)
+            for (int y = GridMap.instance.mapHeight - 1; y >= 0; y--)
             {
                 bool boundary = IsRoom(x, y) && IsRoom(x + 1, y) && !SameRoom(x, y, x + 1, y);
                 if (boundary)
@@ -143,10 +139,10 @@ public class WallBuilder : MonoBehaviour
         }
 
         // 오른쪽 절반
-        for (int x = midX; x < map.mapWidth; x++)
+        for (int x = midX; x < GridMap.instance.mapWidth; x++)
         {
             bool active = false;
-            for (int y = map.mapHeight - 1; y >= 0; y--)
+            for (int y = GridMap.instance.mapHeight - 1; y >= 0; y--)
             {
                 bool boundary = IsRoom(x, y) && IsRoom(x - 1, y) && !SameRoom(x, y, x - 1, y);
                 if (boundary)
@@ -164,10 +160,10 @@ public class WallBuilder : MonoBehaviour
     void BuildHorizontal()
     {
         // 각 가로 경계선: (x,y)와 (x,y+1) 방이 다른 줄
-        for (int y = 0; y < map.mapHeight - 1; y++)
+        for (int y = 0; y < GridMap.instance.mapHeight - 1; y++)
         {
             // 이 y줄에서 가로 경계가 있는 구간을 왼→오로 스캔
-            for (int x = 0; x < map.mapWidth; x++)
+            for (int x = 0; x < GridMap.instance.mapWidth; x++)
             {
                 bool boundary = IsRoom(x, y) && IsRoom(x, y + 1) && !SameRoom(x, y, x, y + 1);
                 if (!boundary) continue;
@@ -197,7 +193,7 @@ public class WallBuilder : MonoBehaviour
     void BuildBottom()
     {
         int y = 0;
-        int midX = map.mapWidth / 2;
+        int midX = GridMap.instance.mapWidth / 2;
 
         // 왼쪽 절반: (x,0)≠(x+1,0) → 왼쪽칸 BottomRightMiddle
         for (int x = 0; x < midX; x++)
@@ -207,7 +203,7 @@ public class WallBuilder : MonoBehaviour
         }
 
         // 오른쪽 절반: (x,0)≠(x-1,0) → 오른쪽칸 BottomLeftMiddle
-        for (int x = midX; x < map.mapWidth; x++)
+        for (int x = midX; x < GridMap.instance.mapWidth; x++)
         {
             if (IsRoom(x, y) && IsRoom(x - 1, y) && !SameRoom(x, y, x - 1, y))
                 Put(new Vector2Int(x, y), WallPiece.BottomLeftMiddle);
@@ -228,7 +224,7 @@ public class WallBuilder : MonoBehaviour
             }
             var go = new GameObject($"Wall_{kv.Key.x}_{kv.Key.y}_{kv.Value}");
             go.transform.SetParent(wallParent);
-            go.transform.position = map.GridToWorld(kv.Key.x, kv.Key.y);
+            go.transform.position = GridMap.instance.GridToWorld(kv.Key.x, kv.Key.y);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = sp;
             sr.sortingOrder = sortingOrder;
@@ -256,14 +252,14 @@ public class WallBuilder : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (!showDebugLabels || placed == null || placed.Count == 0 || map == null) return;
+        if (!showDebugLabels || placed == null || placed.Count == 0 || GridMap.instance == null) return;
 #if UNITY_EDITOR
         var style = new GUIStyle();
         style.normal.textColor = Color.yellow;
         style.fontSize = 8;
         foreach (var kv in placed)
         {
-            Vector3 pos = map.GridToWorld(kv.Key.x, kv.Key.y);
+            Vector3 pos = GridMap.instance.GridToWorld(kv.Key.x, kv.Key.y);
             UnityEditor.Handles.Label(pos, kv.Value.ToString(), style);
         }
 #endif

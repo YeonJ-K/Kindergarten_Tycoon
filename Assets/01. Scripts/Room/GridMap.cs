@@ -29,14 +29,24 @@ public class GridMap : MonoBehaviour
     [Header("Sections")] 
     public List<ZoneRect> presetZones = new();
     
-    public GridCell[,] cells;
+    private GridCell[,] cells;
     
+    public static GridMap instance { get; private set; }
+
     void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+
         BuildGrid();
     }
 
-    public void BuildGrid()
+    private void BuildGrid()
     {
         cells = new GridCell[mapWidth, mapHeight];
         for (int x = 0; x < mapWidth; x++)
@@ -48,8 +58,19 @@ public class GridMap : MonoBehaviour
                 for (int y = z.y; y < z.y + z.height; y++)
                 if (InBounds(x, y))
                     cells[x, y].zone = z.type;
-    }   
-    
+    }
+
+    public GridCell GetCell(int x, int y)
+    {
+        if (!InBounds(x, y)) return null;
+        return cells[x, y];
+    }
+
+    public bool IsWalkable(int x, int y)
+    {
+        return InBounds(x,y) && cells[x, y].IsWalkable;
+    }
+
     // 특정 구역(ZoneType)이 차지하는 칸 범위를 구한다
     // 반환: 최소~최대 칸 좌표. 해당 구역이 없으면 found=false
     public bool GetZoneBounds(ZoneType zone, out Vector2Int min, out Vector2Int max)

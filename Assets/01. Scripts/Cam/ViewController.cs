@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 using Infos;
 
 // ────────────────────────────────────────────────────────────
@@ -14,14 +13,13 @@ public enum ViewMode { Overview, MainRoom }  // 상황실 / 메인룸
 public class ViewController : MonoBehaviour
 {
     [Header("참조")]
-    public GridMap map;
     public Camera cam;
 
     [Header("전환 애니메이션")]
     public float transitionTime = 0.6f;      // 줌 이동 시간(초)
     public AnimationCurve ease =             // 부드러운 감속 곡선
         AnimationCurve.EaseInOut(0, 0, 1, 1);
-    public float padding = 0.5f;             // 구역 주변 여백(유닛)
+    public float padding = 0;             // 구역 주변 여백(유닛)
 
     [Header("화면별 UI (켜고 끌 오브젝트)")]
     public GameObject overviewUI;   // 상황실 UI (스트레스 수치 등)
@@ -65,13 +63,13 @@ public class ViewController : MonoBehaviour
 
         if (mode == ViewMode.MainRoom)
         {
-            center = map.GetZoneCenter(ZoneType.MainRoom);
-            size   = map.GetZoneSize(ZoneType.MainRoom);
+            center = GridMap.instance.GetZoneCenter(ZoneType.MainRoom);
+            size   = GridMap.instance.GetZoneSize(ZoneType.MainRoom);
         }
         else // Overview: 맵 전체
         {
-            center = map.WorldCenter;
-            size   = new Vector2(map.WorldWidth, map.WorldHeight);
+            center = GridMap.instance.WorldCenter;
+            size   = new Vector2(GridMap.instance.WorldWidth, GridMap.instance.WorldHeight);
         }
 
         // Safe Area 비율 기준으로 구역이 꽉 차는 ortho size 계산 (Fill)
@@ -82,7 +80,11 @@ public class ViewController : MonoBehaviour
         float h = size.y + padding;
         float sizeByW = w / safeAspect / 2f;
         float sizeByH = h / 2f;
-        orthoSize = Mathf.Min(sizeByW, sizeByH);   // Fill = 꽉 채우기
+        if (mode == ViewMode.MainRoom)
+            orthoSize = sizeByW;
+        else
+            orthoSize = Mathf.Min(sizeByW, sizeByH);
+        
 
         pos = new Vector3(center.x, center.y, -10f);
     }
