@@ -585,6 +585,9 @@ sysinfo.txt
 !Assets/01. Scripts/*
 !Assets/02. Animator/*
 !Assets/03. Prefabs/*
+!Assets/04. Atlas/*
+!Assets/05. ScriptableObject/*
+Assets/06. DataTable/*
 !Assets/97. EventScripts/*
-!Assets/98. DataSheet/*
-!Assets/100. Package/*
+!Assets/98. Package/*
+!Assets/99. Resources/*

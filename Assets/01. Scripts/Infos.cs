@@ -43,4 +43,33 @@ namespace Infos
         // 가로 중간벽 + 세로 중간벽 T자
         MiddleLeftMiddle, MiddleRightMiddle,
     }
+
+    public enum PlayerFSM
+    {
+        Idle,
+        Walk
+    }
+
+    public enum KidFSM
+    {
+        Idle,
+        Walk,
+        Tired,
+        Angry
+    }
+
+    public enum Kids
+    {
+        Girl01 = 1,
+        Girl02,
+        Girl03,
+        Girl04,
+        Girl05,
+        
+        Boy01 = 10,
+        Boy02,
+        Boy03,
+        Boy04,
+        Boy05,
+    }
 }
