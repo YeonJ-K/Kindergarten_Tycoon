@@ -1,18 +1,15 @@
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Infos;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class PlayerController : CharacterBase
 {
-    [SerializeField] private Camera cam;
+    private Camera cam;
 
     protected override void Awake()
     {
         base.Awake();
+        cam = Camera.main;
         moveTime = 0.5f;
     }
 
@@ -63,7 +60,7 @@ public class PlayerController : CharacterBase
         {
             if (EventSystem.current.IsPointerOverGameObject()) return;
             if (isMove) return;
-            //if (viewController.currentMode != ViewMode.MainRoom) return;
+            if (ViewController.instance.currentMode != ViewMode.MainRoom) return;
             Vector3 world = cam.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int targetCell = GridMap.instance.WorldToGrid(world);
 
@@ -76,7 +73,7 @@ public class PlayerController : CharacterBase
             
             
             
-            var path = pathManager.FindPath(currentCell, targetCell);
+            var path = PathManager.instance.FindPath(currentCell, targetCell);
             if (path != null && path.Count > 0)
             {
                 StopAllCoroutines();

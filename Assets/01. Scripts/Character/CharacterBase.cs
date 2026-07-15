@@ -6,7 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class CharacterBase : MonoBehaviour
 {
-    [SerializeField] protected PathManager pathManager;
     protected float moveTime;
     
     protected Animator animator;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Infos;
@@ -12,28 +13,39 @@ public enum ViewMode { Overview, MainRoom }  // 상황실 / 메인룸
 
 public class ViewController : MonoBehaviour
 {
-    [Header("참조")]
-    public Camera cam;
+    private Camera cam;
 
     [Header("전환 애니메이션")]
-    public float transitionTime = 0.6f;      // 줌 이동 시간(초)
-    public AnimationCurve ease =             // 부드러운 감속 곡선
-        AnimationCurve.EaseInOut(0, 0, 1, 1);
-    public float padding = 0;             // 구역 주변 여백(유닛)
+    private float transitionTime = 0.6f;      // 줌 이동 시간(초)
+    private AnimationCurve ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    private float padding = 0;             // 구역 주변 여백(유닛)
 
     [Header("화면별 UI (켜고 끌 오브젝트)")]
-    public GameObject overviewUI;   // 상황실 UI (스트레스 수치 등)
-    public GameObject mainRoomUI;   // 메인 룸 UI (상태창 등)
+    [SerializeField] private GameObject overviewUI;   // 상황실 UI (스트레스 수치 등)
+    [SerializeField] private GameObject mainRoomUI;   // 메인 룸 UI (상태창 등)
 
-    [Header("현재 상태")]
-    public ViewMode currentMode;
+    public ViewMode currentMode { get; private set; }
 
     Coroutine transition;
+    public static ViewController instance { get; private set; }
+
+    private void Awake()
+    {
+   
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+        cam = Camera.main;
+    }
 
     void Start()
     {
         // 시작은 상황실(맵 전체)로 즉시 세팅
         ApplyImmediate(ViewMode.MainRoom);
+        currentMode = ViewMode.MainRoom;
     }
 
     // ── 버튼에서 호출: 메인 룸으로 ──

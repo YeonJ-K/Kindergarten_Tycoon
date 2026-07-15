@@ -1,16 +1,14 @@
+using System;
 using UnityEngine;
 
 public class RoundManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    private Vector2Int playerSpawn;
+    private Vector2Int kidSpawn;
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        playerSpawn = new Vector2Int();
+        kidSpawn = new Vector2Int();
     }
 }

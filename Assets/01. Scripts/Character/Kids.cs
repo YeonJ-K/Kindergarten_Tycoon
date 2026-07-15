@@ -5,12 +5,10 @@ using UnityEngine;
 using Infos;
 using Random = UnityEngine.Random;
 
-public class KidsMoveController : CharacterBase
+public class Kids : CharacterBase
 {
     [SerializeField] private GameObject RequestBubble;
 
-    private Transform currentPos;
-    
     private int moveRate;
     private float waitMinTime;
     private float waitMaxTime;
@@ -21,7 +19,6 @@ public class KidsMoveController : CharacterBase
     protected override void Awake()
     {
         base.Awake();
-        currentPos = GetComponent<Transform>();
         // 임시 값 //
         moveRate = 70;
         waitMinTime = 2f;
@@ -32,13 +29,17 @@ public class KidsMoveController : CharacterBase
 
     protected override void Start()
     {
+        base.Start();
+        KidsManager.instance.Register(this);
+        RequestBubble.SetActive(false);
         ChangeState(KidState.Wandering);
     }
 
     private void ChangeState(KidState next)
     {
         state = next;
-        StopCoroutine(stateRoutine);
+        if (stateRoutine != null)
+            StopCoroutine(stateRoutine);
         
         switch (state)
         {
@@ -84,17 +85,27 @@ public class KidsMoveController : CharacterBase
         }
     }
 
-    private bool TryPickWanderTarget(out Vector2Int target)
+    private bool TryPickWanderTarget(ZoneType zone, HashSet<Vector2Int> occupied, out Vector2Int target)
     {
-        GridMap.instance.GetZoneBounds(ZoneType.MainRoom, out var min, out var max);
-        int x = Random.Range(min.x, max.x);
-        int y = Random.Range(min.y, max.y);
+        GridMap.instance.GetZoneBounds(zone, out var min, out var max);
         
-        if (!GridMap.instance.InBounds(out target.x, y)) return false;
-        if (GridMap.instance.GetCell(x, y).zone != ZoneType.MainRoom) return false;
-        if (GridMap.instance.IsDoor(x, y)) return false;
-        if (!GridMap.instance.IsWalkable(x, y)) return false;
-        if (currentPos != new Vector2Int(x,y)) return false;
+        for (int i = 0; i < 10; i++)
+        {
+            int x = Random.Range(min.x, max.x+1);
+            int y = Random.Range(min.y, max.y+1);
+            
+            if (GridMap.instance.GetCell(x, y).zone != zone) continue;
+            if (GridMap.instance.IsDoor(x, y)) continue;
+            if (!GridMap.instance.IsWalkable(x, y)) continue;
+            if (currentCell == new Vector2Int(x,y)) continue;
+            if (occupied.Contains(new Vector2Int(x, y))) continue;
+            
+            target = new Vector2Int(x, y);
+            return true;
+        }
+
+        target = default;
+        return false;
     }
 
     IEnumerator KidsMoveAround()
@@ -103,23 +114,22 @@ public class KidsMoveController : CharacterBase
         {
             // 이동
             int rate = Random.Range(0, 100);
-
             
-            if (rate < moveRate && TryPickWanderTarget(out var target))
+            if (rate < moveRate)
             {
-
-
-                // 메인 룸 안에서 랜덤으로 목적지 고르기 (걸을 수 있어야함, door 아니어야 함, 현재 칸이 아니어야 함)
-                //var path = pathManager.FindPath()
-
+                var occupied = KidsManager.instance.GetOccupied(currentCell);
+                if (TryPickWanderTarget(ZoneType.MainRoom, occupied, out var target))
+                {
+                    var path = PathManager.instance.FindPath(currentCell, target, occupied);
+                    if (path != null && path.Count > 1)
+                        yield return StartCoroutine(FollowPath(path));    
+                }
             }
                 
             // 잠시 대기
             float waitRate = Random.Range(waitMinTime, waitMaxTime);
             yield return new WaitForSeconds(waitRate);
         }
-
-        yield break;
     }
     
     

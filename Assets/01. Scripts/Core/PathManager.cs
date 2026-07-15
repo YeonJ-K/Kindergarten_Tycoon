@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PathManager : MonoBehaviour
 {
+    public static PathManager instance { get; private set; }
+
     // 이동 비용은 1로 지정한다.
     class Node
     {
@@ -21,6 +24,16 @@ public class PathManager : MonoBehaviour
         Vector2Int.up, Vector2Int.down,
     };
 
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+    
     public List<Vector2Int> FindPath(Vector2Int start, Vector2Int goal, HashSet<Vector2Int> occupied = null)
     {
         var open = new List<Node>();
