@@ -46,4 +46,9 @@ public class KidsManager : MonoBehaviour
 
         return occupied;
     }
+
+    public void Entering(Vector2Int pos)
+    {
+        
+    }
 }

@@ -5,6 +5,13 @@ using UnityEngine;
 using Infos;
 using Random = UnityEngine.Random;
 
+
+public class KidsInfo
+{
+    public KidsID kidId;
+    public bool isGirl;
+}
+
 public class Kids : CharacterBase
 {
     [SerializeField] private GameObject RequestBubble;

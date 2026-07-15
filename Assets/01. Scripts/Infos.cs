@@ -47,7 +47,7 @@ namespace Infos
         Exiting
     }
 
-    public enum Kids
+    public enum KidsID
     {
         Girl01 = 1,
         Girl02,
