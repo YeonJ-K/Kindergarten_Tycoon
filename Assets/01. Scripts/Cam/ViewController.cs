@@ -26,14 +26,14 @@ public class ViewController : MonoBehaviour
     public GameObject mainRoomUI;   // 메인 룸 UI (상태창 등)
 
     [Header("현재 상태")]
-    public ViewMode currentMode = ViewMode.Overview;
+    public ViewMode currentMode;
 
     Coroutine transition;
 
     void Start()
     {
         // 시작은 상황실(맵 전체)로 즉시 세팅
-        ApplyImmediate(ViewMode.Overview);
+        ApplyImmediate(ViewMode.MainRoom);
     }
 
     // ── 버튼에서 호출: 메인 룸으로 ──

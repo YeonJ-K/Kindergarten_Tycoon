@@ -5,95 +5,122 @@ using UnityEngine;
 using Infos;
 using Random = UnityEngine.Random;
 
-public class KidsMoveController : MonoBehaviour
+public class KidsMoveController : CharacterBase
 {
-    [SerializeField] private GameObject StatusUI;
-    [SerializeField] private RectTransform uiRT;
-    [SerializeField] private PathManager pathManager;
+    [SerializeField] private GameObject RequestBubble;
 
-    [SerializeField] private float moveTime = 0.3f;
-    private bool isMove;
-    private bool isAngry;
-    private bool isTired;
-    private float moveChance;
-    Animator animator;
-
-    private void Start()
+    private Transform currentPos;
+    
+    private int moveRate;
+    private float waitMinTime;
+    private float waitMaxTime;
+    
+    private KidState state;
+    Coroutine stateRoutine;
+    
+    protected override void Awake()
     {
-        isMove = false;
-        moveChance = 0.5f;
+        base.Awake();
+        currentPos = GetComponent<Transform>();
+        // 임시 값 //
+        moveRate = 70;
+        waitMinTime = 2f;
+        waitMaxTime = 4f;
+        moveTime = 0.65f;
+        // ---- //
     }
 
-    IEnumerator BehaviorLoop()
+    protected override void Start()
     {
-        while (true)
+        ChangeState(KidState.Wandering);
+    }
+
+    private void ChangeState(KidState next)
+    {
+        state = next;
+        StopCoroutine(stateRoutine);
+        
+        switch (state)
         {
-            // 일정 시간 대기 (예: 2~4초 랜덤)
-            //yield return new WaitForSeconds(/* 랜덤 간격 */);
-
-            // 이미 움직이는 중이면 스킵
-            if (isMove) continue;
-
-            // 확률 체크: 움직일까?
-            if (Random.value < moveChance)
+            case KidState.Entering: // 등원
             {
-                // 목표 칸 정하기
-                //Vector2Int target = /* 어떻게 정할지? */;
+                //stateRoutine = StartCoroutine();
+                break;
+            }
 
-                // 경로 찾아서 이동
-                //var path = pathManager.FindPath(currentCell, target, GetOccupied());
-                //if (path != null && path.Count > 1)
-                //    yield return StartCoroutine(FollowPath(path));
+            case KidState.Wandering: // 메인 룸 돌아다니기
+            {
+                stateRoutine = StartCoroutine(KidsMoveAround());
+                break;
+            }
+            case KidState.MovingToZone: // 구역으로 이동
+            {
+                
+                break;
+            }
+            
+            case KidState.Doing: // 구역에서 특별 행동
+            {
+                break;
+            }
+
+            case KidState.Requesting: // 요구사항 발생
+            {
+                animator.SetBool("isTired", true);
+                break;
+            }
+
+            case KidState.StressUp: // 요구사항 발생 이후 제한시간 지남
+            {
+                animator.SetBool("isTired", true);
+                break;
+            }
+
+            case KidState.Exiting: // 하원
+            {
+                
+                break;
             }
         }
     }
 
-    IEnumerator FollowPath(List<Vector2Int> path)
+    private bool TryPickWanderTarget(out Vector2Int target)
     {
-        isMove = true;
-        Vector2Int firstMoveCell = path.Count > 1 ? path[1] : path[0];
-        Vector3 firstTarget = GridMap.instance.GridToWorld(firstMoveCell.x, firstMoveCell.y);
-        Vector3 firstDir = (firstTarget - transform.position);
+        GridMap.instance.GetZoneBounds(ZoneType.MainRoom, out var min, out var max);
+        int x = Random.Range(min.x, max.x);
+        int y = Random.Range(min.y, max.y);
+        
+        if (!GridMap.instance.InBounds(out target.x, y)) return false;
+        if (GridMap.instance.GetCell(x, y).zone != ZoneType.MainRoom) return false;
+        if (GridMap.instance.IsDoor(x, y)) return false;
+        if (!GridMap.instance.IsWalkable(x, y)) return false;
+        if (currentPos != new Vector2Int(x,y)) return false;
+    }
 
-        animator.SetFloat("MoveX", firstDir.x);
-        animator.SetFloat("MoveY", firstDir.y);
-        animator.SetBool("isWalk", true);
-        for(int i = 1; i< path.Count; i++)
+    IEnumerator KidsMoveAround()
+    {
+        while (true)
         {
-            Vector2Int cell = path[i];
-            // 월드 좌표 구하기
-            Vector3 target = GridMap.instance.GridToWorld(cell.x, cell.y);
+            // 이동
+            int rate = Random.Range(0, 100);
+
             
-            // 부드럽게 이동
-            yield return StartCoroutine(GridSmoothMovement(target));
-            
-            // 도착했으니 칸 갱신
-            //currentCell = cell;
+            if (rate < moveRate && TryPickWanderTarget(out var target))
+            {
+
+
+                // 메인 룸 안에서 랜덤으로 목적지 고르기 (걸을 수 있어야함, door 아니어야 함, 현재 칸이 아니어야 함)
+                //var path = pathManager.FindPath()
+
+            }
+                
+            // 잠시 대기
+            float waitRate = Random.Range(waitMinTime, waitMaxTime);
+            yield return new WaitForSeconds(waitRate);
         }
-        isMove = false;
-        animator.SetBool("isWalk", false);
+
+        yield break;
     }
     
-    private IEnumerator GridSmoothMovement(Vector3 end)
-    {
-        Vector3 start = transform.position;
-        Vector3 dir = (end - start);
-
-        animator.SetFloat("MoveX", dir.x);
-        animator.SetFloat("MoveY", dir.y);
-
-        float	current = 0;
-        float	percent = 0;
-
-        while ( percent < 1 )
-        {
-            current += Time.deltaTime;
-            percent = current / moveTime;
-
-            transform.position = Vector3.Lerp(start, end, percent);
-            yield return null;
-        }
-        transform.position = end;
-    }
-        
+    
 }

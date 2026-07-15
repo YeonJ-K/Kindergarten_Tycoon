@@ -14,14 +14,6 @@ namespace Infos
         WallPaper
     }
 
-    public enum Dir
-    {
-        Up,
-        Down,
-        Left,
-        Right,
-    }
-
     public enum WallPiece
     {
         None,
@@ -44,18 +36,15 @@ namespace Infos
         MiddleLeftMiddle, MiddleRightMiddle,
     }
 
-    public enum PlayerFSM
+    public enum KidState
     {
-        Idle,
-        Walk
-    }
-
-    public enum KidFSM
-    {
-        Idle,
-        Walk,
-        Tired,
-        Angry
+        Entering,
+        Wandering,
+        Requesting,
+        MovingToZone,
+        Doing,
+        StressUp,
+        Exiting
     }
 
     public enum Kids

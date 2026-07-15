@@ -2,40 +2,44 @@ using UnityEngine;
 
 public class SafeArea : MonoBehaviour
 {
-   private const float MaxBottomMargin = 30f;
-    private static Rect s_safeRect;
-
-    public bool fitToTop = true;
-    public bool fitToBottom = true;
-
-    private static bool Initialized { get; set; }
-
-    private Vector2 curScreenSize => new Vector2(Screen.width, Screen.height);
-    private Vector2 saveScreenSize;
-
-    public void Start()
+    private RectTransform rectTransform;
+    private Rect lastSafeArea;
+    private Vector2Int lastScreenSize;
+    
+    private void Awake()
     {
-        if (!Initialized)
-        {
-            saveScreenSize = curScreenSize;
+        rectTransform = GetComponent<RectTransform>();
+        Apply();
+    }
 
-            float y = Mathf.Min(MaxBottomMargin, Screen.safeArea.y);
-            var min = new Vector2(Screen.safeArea.x, y);
-            var max = Screen.safeArea.position + Screen.safeArea.size;
+    private void Update()
+    {
+        // 회전/해상도 변경 감지
+        if (Screen.safeArea != lastSafeArea ||
+            Screen.width != lastScreenSize.x || Screen.height != lastScreenSize.y)
+            Apply();
+    }
 
-            min.x /= Screen.width;
-            max.x /= Screen.width;
-            min.y /= Screen.height;
-            max.y /= Screen.height;
+    private void Apply()
+    {
+        lastSafeArea = Screen.safeArea;
+        lastScreenSize = new Vector2Int(Screen.width, Screen.height);
 
-            s_safeRect = new Rect(min, max);
-            Initialized = true;
-        }
+        Rect safe = Screen.safeArea;
 
-        var rt = transform as RectTransform;
+        // 픽셀 → 0~1 비율
+        Vector2 anchorMin = safe.position;
+        Vector2 anchorMax = safe.position + safe.size;
+        anchorMin.x /= Screen.width;
+        anchorMin.y /= Screen.height;
+        anchorMax.x /= Screen.width;
+        anchorMax.y /= Screen.height;
 
-        rt.anchorMin = fitToBottom ? s_safeRect.position : Vector2.zero;
-        rt.anchorMax = fitToTop ? s_safeRect.size : Vector2.one;
-        rt.offsetMin = rt.offsetMax = Vector2.zero;
+        rectTransform.anchorMin = anchorMin;
+        rectTransform.anchorMax = anchorMax;
+
+        // 앵커에 딱 붙도록 오프셋 제거
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
     }
 }

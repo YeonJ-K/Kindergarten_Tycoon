@@ -67,7 +67,8 @@ public class PathManager : MonoBehaviour
                 // 3. 이미 closed 된 칸
                 // 4. 다른 유치원생이 있는 칸
                 // 5. 입구칸
-                if (!IsWalkable(next, occupied)) continue;
+                if (!GridMap.instance.CanEnter(current.pos, next)) continue; 
+                if (occupied != null && occupied.Contains(next)) continue;
                 if (close.Contains(next)) continue;
                 
                 int newG = current.g + 1; // 이동 비용 1
@@ -116,30 +117,6 @@ public class PathManager : MonoBehaviour
         path.Reverse(); // 출발지에서 목표 순서로 돌리기 위해서 순서 바꾸기
 
         return path;
-    }
-
-    bool IsWalkable(Vector2Int pos, HashSet<Vector2Int> occupied)
-    {
-        var cell = GridMap.instance.GetCell(pos.x, pos.y);
-        if (cell == null) return false;
-        if (!cell.IsWalkable) return false;
-        if (occupied != null && occupied.Contains(pos)) return false;
-
-        return true;
-    }
-
-    HashSet<Vector2Int> GetOccupied(Vector2Int pos)
-    {
-        var set = new HashSet<Vector2Int>();
-        /*foreach (var kid in allKids)
-        {
-            Vector2Int cell = map.WorldToGrid(kid.transform.positon);
-            if (cell != pos)
-                set.Add(cell);
-        }*/
-
-        // 플레이어의 위치도 추가하기
-        return set;
     }
     
 }

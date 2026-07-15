@@ -15,6 +15,8 @@ public class GridCell
 public class ZoneRect
 {
     public ZoneType type = ZoneType.MainRoom;
+    public bool hasDoor;
+    public Vector2Int door;
     public int x, y;
     public int width = 3, height = 3;
 }
@@ -30,6 +32,14 @@ public class GridMap : MonoBehaviour
     public List<ZoneRect> presetZones = new();
     
     private GridCell[,] cells;
+    private HashSet<(Vector2Int, Vector2Int)> doorPairs = new();
+    private HashSet<Vector2Int> doors = new();
+
+    private static readonly Vector2Int[] dirs =
+    {
+        Vector2Int.left, Vector2Int.right,
+        Vector2Int.up, Vector2Int.down,
+    };
     
     public static GridMap instance { get; private set; }
 
@@ -44,6 +54,7 @@ public class GridMap : MonoBehaviour
         instance = this;
 
         BuildGrid();
+        BuildDoorPairs();
     }
 
     private void BuildGrid()
@@ -60,6 +71,32 @@ public class GridMap : MonoBehaviour
                     cells[x, y].zone = z.type;
     }
 
+    private void BuildDoorPairs()
+    {
+        doors.Clear();
+        doorPairs.Clear();
+        foreach (var z in presetZones)
+        {
+            if (!z.hasDoor)
+                continue;
+            
+            foreach (var dir in dirs)
+            {
+                Vector2Int doorNeighbor = z.door + dir;
+
+                if (GetCell(doorNeighbor.x, doorNeighbor.y) == null)
+                    continue;
+
+                if (GetCell(doorNeighbor.x, doorNeighbor.y).zone == z.type)
+                {
+                    doors.Add(z.door);
+                    doorPairs.Add((z.door, doorNeighbor));
+                    doorPairs.Add((doorNeighbor, z.door));
+                }
+            }
+        }
+    }
+
     public GridCell GetCell(int x, int y)
     {
         if (!InBounds(x, y)) return null;
@@ -69,6 +106,24 @@ public class GridMap : MonoBehaviour
     public bool IsWalkable(int x, int y)
     {
         return InBounds(x,y) && cells[x, y].IsWalkable;
+    }
+
+    public bool IsDoor(int x, int y)
+    {
+        return doors.Contains(new Vector2Int(x, y));
+    }
+
+    public bool CanEnter(Vector2Int from, Vector2Int to)
+    {
+        var fromCell = GetCell(from.x, from.y);
+        var toCell = GetCell(to.x, to.y);
+        
+        if (fromCell == null || toCell == null) return false;
+        if (!toCell.IsWalkable) return false;
+        
+        if (cells[from.x, from.y].zone == cells[to.x, to.y].zone) return true;
+        
+        return doorPairs.Contains((from, to));
     }
 
     // 특정 구역(ZoneType)이 차지하는 칸 범위를 구한다
@@ -114,6 +169,27 @@ public class GridMap : MonoBehaviour
         return new Vector2(w, h);
     }
     
+    // 특정 구역의 입구
+    public void SetZoneDoor(ZoneType zone, Vector2Int doorPos)
+    {
+        if (GetCell(doorPos.x, doorPos.y) == null)
+            return;
+        
+        if (GetCell(doorPos.x, doorPos.y).zone != ZoneType.MainRoom)
+            return;
+
+        foreach (var z in presetZones)
+        {
+            if (z.type == zone)
+            {
+                z.hasDoor = true;
+                z.door = doorPos;
+                break;
+            }
+        }
+        BuildDoorPairs();
+    }
+
     public Vector3 GridToWorld(int x, int y)
      => new Vector3(x * cellSize + cellSize / 2f, y * cellSize + cellSize / 2f, 0f);
     public Vector2Int WorldToGrid(Vector3 world)
@@ -156,6 +232,15 @@ public class GridMap : MonoBehaviour
                         Gizmos.color = ZoneColor(z.type);
                         Gizmos.DrawCube(GridToWorld(x, y), Vector3.one * cellSize * 0.9f);
                     }
+
+        foreach (var z in presetZones)
+        {
+            if (z.hasDoor)
+            {
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawCube(GridToWorld(z.door.x, z.door.y), Vector3.one * cellSize * 0.9f);    
+            }
+        }
     }
     
     Color ZoneColor(ZoneType zone) => zone switch

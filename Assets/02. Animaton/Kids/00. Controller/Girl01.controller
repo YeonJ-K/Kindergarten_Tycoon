@@ -284,6 +284,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: isTired
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: isWalk
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3216481468124513296}
   m_Solo: 0
