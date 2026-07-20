@@ -13,6 +13,8 @@ public class CharacterBase : MonoBehaviour
     public bool IsMove => isMove;
     protected Vector2Int currentCell;
     public Vector2Int CurrentCell => currentCell;
+    protected Vector2Int reservedCell;
+    public Vector2Int ReservedCell => reservedCell;
 
     protected virtual void Awake()
     {

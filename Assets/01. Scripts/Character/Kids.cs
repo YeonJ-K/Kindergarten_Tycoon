@@ -27,7 +27,7 @@ public class Kids : CharacterBase
     {
         base.Awake();
         // 임시 값 //
-        moveRate = 70;
+        moveRate = 45;
         waitMinTime = 2f;
         waitMaxTime = 4f;
         moveTime = 0.65f;
@@ -37,9 +37,9 @@ public class Kids : CharacterBase
     protected override void Start()
     {
         base.Start();
-        KidsManager.instance.Register(this);
+        //KidsManager.instance.Register(this);
         RequestBubble.SetActive(false);
-        ChangeState(KidState.Wandering);
+        ChangeState(KidState.Entering);
     }
 
     private void ChangeState(KidState next)
@@ -52,13 +52,13 @@ public class Kids : CharacterBase
         {
             case KidState.Entering: // 등원
             {
-                //stateRoutine = StartCoroutine();
+                //stateRoutine = StartCoroutine(EnteringRoutine());
                 break;
             }
 
             case KidState.Wandering: // 메인 룸 돌아다니기
             {
-                stateRoutine = StartCoroutine(KidsMoveAround());
+                //stateRoutine = StartCoroutine(KidsMoveAround());
                 break;
             }
             case KidState.MovingToZone: // 구역으로 이동
@@ -86,7 +86,7 @@ public class Kids : CharacterBase
 
             case KidState.Exiting: // 하원
             {
-                
+                stateRoutine = StartCoroutine(ExitingRoutine());
                 break;
             }
         }
@@ -115,6 +115,7 @@ public class Kids : CharacterBase
         return false;
     }
 
+    /*
     IEnumerator KidsMoveAround()
     {
         while (true)
@@ -124,7 +125,7 @@ public class Kids : CharacterBase
             
             if (rate < moveRate)
             {
-                var occupied = KidsManager.instance.GetOccupied(currentCell);
+                var occupied = KidsManager.instance.GetOccupied(this);
                 if (TryPickWanderTarget(ZoneType.MainRoom, occupied, out var target))
                 {
                     var path = PathManager.instance.FindPath(currentCell, target, occupied);
@@ -137,7 +138,25 @@ public class Kids : CharacterBase
             float waitRate = Random.Range(waitMinTime, waitMaxTime);
             yield return new WaitForSeconds(waitRate);
         }
+    }*/
+
+    /*
+    IEnumerator EnteringRoutine()
+    {
+        var occupied = KidsManager.instance.GetOccupied(this);
+        if (TryPickWanderTarget(ZoneType.MainRoom, occupied, out var target))
+        {
+            var path = PathManager.instance.FindPath(currentCell, target, occupied);
+            if (path != null && path.Count > 1)
+                yield return StartCoroutine(FollowPath(path));
+        }
+        ChangeState(KidState.Wandering);
+    }*/
+
+    IEnumerator ExitingRoutine()
+    {
+        yield return new WaitForSeconds(waitMaxTime);
+        //KidsManager.instance.UnRegister(this);
     }
-    
-    
+
 }
