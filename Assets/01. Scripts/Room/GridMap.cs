@@ -37,8 +37,8 @@ public class GridMap : MonoBehaviour
 
     private static readonly Vector2Int[] dirs =
     {
-        Vector2Int.left, Vector2Int.right,
         Vector2Int.up, Vector2Int.down,
+        Vector2Int.left, Vector2Int.right
     };
     
     public static GridMap instance { get; private set; }

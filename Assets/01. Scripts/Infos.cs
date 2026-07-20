@@ -2,6 +2,12 @@ using UnityEngine;
 
 namespace Infos
 {
+    public enum UserSex
+    {
+        Male,
+        Female
+    }
+    
     public enum ZoneType
     {
         None,
@@ -17,7 +23,7 @@ namespace Infos
     public enum WallPiece
     {
         None,
-            
+
         // 바깥 테두리 직선
         Top, Bottom, Left, Right,
         // 바깥 테두리 코너
