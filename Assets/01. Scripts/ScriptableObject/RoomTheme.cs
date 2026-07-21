@@ -7,8 +7,5 @@ public class RoomTheme : ScriptableObject
 {
     public Sprite[] roomSprite;
     
-    public Sprite GetRoomSprite(ZoneType zone)
-    {
-        return roomSprite[(int)zone-1];
-    }
+    public Sprite GetRoomSprite(ZoneType zone) => roomSprite[(int)zone-1];
 }

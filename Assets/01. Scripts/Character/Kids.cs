@@ -6,12 +6,6 @@ using Infos;
 using Random = UnityEngine.Random;
 
 
-public class KidsInfo
-{
-    public KidsID kidId;
-    public bool isGirl;
-}
-
 public class Kids : CharacterBase
 {
     [SerializeField] private GameObject RequestBubble;
@@ -59,28 +53,6 @@ public class Kids : CharacterBase
             case KidState.Wandering: // 메인 룸 돌아다니기
             {
                 //stateRoutine = StartCoroutine(KidsMoveAround());
-                break;
-            }
-            case KidState.MovingToZone: // 구역으로 이동
-            {
-                
-                break;
-            }
-            
-            case KidState.Doing: // 구역에서 특별 행동
-            {
-                break;
-            }
-
-            case KidState.Requesting: // 요구사항 발생
-            {
-                animator.SetBool("isTired", true);
-                break;
-            }
-
-            case KidState.StressUp: // 요구사항 발생 이후 제한시간 지남
-            {
-                animator.SetBool("isTired", true);
                 break;
             }
 

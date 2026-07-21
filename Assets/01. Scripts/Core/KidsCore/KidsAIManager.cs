@@ -33,6 +33,7 @@ public class KidsAIManager : MonoBehaviour
         float dt = Time.deltaTime;
         foreach (KidsAI kidAI in kidAIs)
         {
+            kidAI.context.needs.Tick(dt);
             kidAI.agent.Tick(dt); // 이동 갱신
             kidAI.machine.Tick(dt); // 상태 판단
         }
@@ -44,7 +45,8 @@ public class KidsAIManager : MonoBehaviour
     {
         var context = new KidsContext();
         context.agent = agent;
-
+        agent.SetContext(context);
+        
         var machine = new StateMachine(context, new EnteringState());
         context.machine = machine;
 

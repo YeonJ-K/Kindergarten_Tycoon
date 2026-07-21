@@ -20,11 +20,19 @@ public class KidAgent : MonoBehaviour
     private float moveTime;
     private Vector3 segStart, segEnd;
     private float doorTimer;
+    private float blockTimer;
 
     public bool IsMove { get; private set; }
     public Vector2Int CurrentCell { get; private set; }
     public Vector2Int NextCell => (IsMove && doorTimer <= 0f && path != null && index < path.Count) 
                                  ? path[index] : CurrentCell;
+
+    public KidsContext Context { get; private set; }
+
+    private static readonly Vector2[] dirs =
+    {
+        Vector2.up, Vector2.right, Vector2.down, Vector2.left
+    };
 
     private bool needBeginSegment;
 
@@ -84,10 +92,18 @@ public class KidAgent : MonoBehaviour
             if (occupied.Contains(path[index]))
             {
                 animator.SetBool("isWalk", false);
+                blockTimer += dt;
+
+                if (blockTimer > 1.5f)
+                {
+                    IsMove = false;
+                    blockTimer = 0f;
+                }
                 return;
             }
             BeginSegment();
             needBeginSegment = false;
+            blockTimer = 0f;
         }
 
         percent += dt / moveTime;
@@ -150,6 +166,40 @@ public class KidAgent : MonoBehaviour
 
     public void FaceRandomDir()
     {
-        
+        Vector2 dir = dirs[Random.Range(0, dirs.Length)];
+        animator.SetFloat("MoveX", dir.x);
+        animator.SetFloat("MoveY", dir.y);
     }
+
+    public void SetContext(KidsContext context)
+    {
+        Context = context;
+    }
+
+    public void GotCaught()
+    {
+        Context.machine.ChangeState(new WaitingState());
+    }
+
+    public void RequestWait()
+    {
+        if (!RequestBubble.activeSelf)
+            RequestBubble.SetActive(true);
+        if (!animator.GetBool("isTired"))
+            animator.SetBool("isTired", true);
+    }
+
+    public void RequestClear()
+    {
+        RequestBubble.SetActive(false);
+        animator.SetBool("isTired", false);
+        animator.SetBool("isAngry", false);
+    }
+
+    public void Angry()
+    {
+        animator.SetBool("isAngry", true);
+        animator.SetBool("isTired", false);
+    }
+
 }

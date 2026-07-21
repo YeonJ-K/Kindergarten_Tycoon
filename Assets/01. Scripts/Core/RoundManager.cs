@@ -18,6 +18,7 @@ public class RoundManager : MonoBehaviour
     private float exitDuration;
     private float roundFinishTime;
     private int roundPerKids;
+    public bool roundStart { get; private set; }
 
     private void Awake()
     {
@@ -32,7 +33,7 @@ public class RoundManager : MonoBehaviour
         playerSpawn = new Vector2Int(11,3);
         enterDuration = 15;
         exitDuration = 15;
-        roundFinishTime = 10;
+        roundFinishTime = 30;
         roundPerKids = 3;
         // -----
 
@@ -49,7 +50,10 @@ public class RoundManager : MonoBehaviour
         SetKidsSpawnPos();
         
         yield return StartCoroutine(Entering());
+
         yield return new WaitForSeconds(roundFinishTime);
+        Debug.Log("퇴장 시작");
+        roundStart = false;
         KidsAIManager.instance.ExitAll();
     }
 
@@ -116,6 +120,8 @@ public class RoundManager : MonoBehaviour
             remainTime -= wait;
             yield return new WaitForSeconds(wait); 
         }
+        roundStart = true;
+        ViewController.instance.SwitchTo(ViewMode.MainRoom);
     }
 
 

@@ -15,7 +15,9 @@ public class KidsContext
     public float timer;
     public Vector2Int desCell;
     public bool wantExit;
+    public NeedType requestingNeed;
 
     public KidAgent agent;
     public StateMachine machine;
+    public KidNeeds needs = new();
 }

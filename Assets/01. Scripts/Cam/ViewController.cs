@@ -18,7 +18,7 @@ public class ViewController : MonoBehaviour
     [Header("전환 애니메이션")]
     private float transitionTime = 0.6f;      // 줌 이동 시간(초)
     private AnimationCurve ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
-    private float padding = 0;             // 구역 주변 여백(유닛)
+    private float padding;             // 구역 주변 여백(유닛)
 
     [Header("화면별 UI (켜고 끌 오브젝트)")]
     [SerializeField] private GameObject overviewUI;   // 상황실 UI (스트레스 수치 등)
@@ -44,8 +44,7 @@ public class ViewController : MonoBehaviour
     void Start()
     {
         // 시작은 상황실(맵 전체)로 즉시 세팅
-        ApplyImmediate(ViewMode.MainRoom);
-        currentMode = ViewMode.MainRoom;
+        ApplyImmediate(ViewMode.Overview);
     }
 
     // ── 버튼에서 호출: 메인 룸으로 ──
@@ -77,11 +76,13 @@ public class ViewController : MonoBehaviour
         {
             center = GridMap.instance.GetZoneCenter(ZoneType.MainRoom);
             size   = GridMap.instance.GetZoneSize(ZoneType.MainRoom);
+            padding = 3.5f;
         }
         else // Overview: 맵 전체
         {
             center = GridMap.instance.WorldCenter;
             size   = new Vector2(GridMap.instance.WorldWidth, GridMap.instance.WorldHeight);
+            padding = 0.3f;
         }
 
         // Safe Area 비율 기준으로 구역이 꽉 차는 ortho size 계산 (Fill)

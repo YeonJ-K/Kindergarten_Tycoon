@@ -10,11 +10,23 @@ public class WanderingState : IKidState
     public KidState Id => KidState.Wandering;
     public void Enter(KidsContext context)
     {
+        context.needs.isActive = true;
+        Debug.Log("입장 완료. 요구 상태 단계 하락 기능 시작");
         context.timer = Random.Range(waitMin, waitMax);
     }
 
     public void Tick(KidsContext context, float deltaTime)
     {
+        for (int i = 0; i < context.needs.kidStatus.Length; i++)
+        {
+            if (context.needs.kidStatus[i] <= NeedLevel.Normal)
+            {
+                context.requestingNeed = (NeedType)i;
+                context.agent.RequestWait();
+                return;
+            }
+        }
+        
         if (context.agent.IsMove) return;
         
         context.timer -= deltaTime;

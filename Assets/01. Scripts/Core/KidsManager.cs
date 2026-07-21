@@ -50,5 +50,26 @@ public class KidsManager : MonoBehaviour
         return occupied;
     }
     
-    
+    public HashSet<Vector2Int> GetOccupied()
+    {
+        var occupied = new HashSet<Vector2Int>();
+        foreach (var kid in agents)
+        {
+            occupied.Add(kid.CurrentCell);
+            occupied.Add(kid.NextCell);
+        }
+
+        return occupied;
+    }
+
+    public KidAgent GetKidAgent(Vector2Int cell)
+    {
+        foreach (var agent in agents)
+        {
+            if (agent.CurrentCell == cell)
+                return agent;
+        }
+        return null;
+    }
+
 }
