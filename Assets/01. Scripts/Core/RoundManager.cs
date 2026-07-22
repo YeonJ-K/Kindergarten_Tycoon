@@ -18,7 +18,11 @@ public class RoundManager : MonoBehaviour
     private float exitDuration;
     private float roundFinishTime;
     private int roundPerKids;
+    
     public bool roundStart { get; private set; }
+    public int StressCount { get; private set; }
+    public int MiniGameMoney { get; private set; }
+    public bool isMiniGamePlaying { get;  private set; }
 
     private void Awake()
     {
@@ -28,12 +32,14 @@ public class RoundManager : MonoBehaviour
             return;
         }
         instance = this;
+        MiniGameMoney = 0;
+        isMiniGamePlaying = false;
         
         // 임시 값 
         playerSpawn = new Vector2Int(11,3);
         enterDuration = 15;
         exitDuration = 15;
-        roundFinishTime = 30;
+        roundFinishTime = 180;
         roundPerKids = 3;
         // -----
 
@@ -124,5 +130,10 @@ public class RoundManager : MonoBehaviour
         ViewController.instance.SwitchTo(ViewMode.MainRoom);
     }
 
+    public void IncreaseStress() => StressCount++;
+    public void GetMiniGameMoney(int money)=> MiniGameMoney += money;
+    public void SetMiniGamePlaying(bool isPlaying) => isMiniGamePlaying = isPlaying;
+    
+    
 
 }

@@ -7,12 +7,16 @@ public class WaitingState : IKidState
 
     public void Enter(KidsContext context)
     {
-        
+        context.agent.StopMove();
     }
 
     public void Tick(KidsContext context, float dt)
     {
-        
+        if (context.releaseWaiting)
+        {
+            context.releaseWaiting = false;
+            context.machine.ChangeState(new WanderingState());
+        }
     }
 
     public void Exit(KidsContext context)

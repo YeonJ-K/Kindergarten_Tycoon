@@ -11,7 +11,9 @@ public class KidAgent : MonoBehaviour
 {
     [SerializeField] private GameObject RequestBubble;
     
+    // 애니메이션 관련 변수
     private Animator animator;
+    private float emotionTimer;
     
     // 이동 관련 변수
     private List<Vector2Int> path;
@@ -79,12 +81,22 @@ public class KidAgent : MonoBehaviour
     public void Tick(float dt)
     {
         if (!IsMove) return;
+        
+        if (emotionTimer > 0f)
+        {
+            emotionTimer -= dt;
+            animator.SetBool("isWalk", false);
+            return;
+        }
+        
         if (doorTimer > 0f)
         {
             doorTimer -= dt;
             animator.SetBool("isWalk", false);
             return;
         }
+
+
 
         if (needBeginSegment)
         {
@@ -185,8 +197,16 @@ public class KidAgent : MonoBehaviour
     {
         if (!RequestBubble.activeSelf)
             RequestBubble.SetActive(true);
-        if (!animator.GetBool("isTired"))
-            animator.SetBool("isTired", true);
+        animator.SetBool("isWalk", false);
+        animator.SetBool("isTired", true);
+        emotionTimer = 0.5f;
+    }
+
+    public void StopMove()
+    {
+        IsMove = false;
+        path = null;
+        animator.SetBool("isWalk", false);
     }
 
     public void RequestClear()
@@ -198,8 +218,10 @@ public class KidAgent : MonoBehaviour
 
     public void Angry()
     {
+        animator.SetBool("isWalk", false);
         animator.SetBool("isAngry", true);
         animator.SetBool("isTired", false);
+        emotionTimer = 0.5f;
     }
 
 }

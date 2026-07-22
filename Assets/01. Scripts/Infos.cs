@@ -55,6 +55,13 @@ namespace Infos
         Exiting
     }
 
+    public enum KidEmotion
+    {
+        Normal,
+        Tired,
+        Angry
+    }
+
     public enum NeedLevel
     {
         VeryBad = 1,

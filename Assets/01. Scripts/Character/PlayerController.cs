@@ -36,62 +36,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         
-//#if UNITY_ANDROID
-        /*
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
-            {
-                if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
-
-                if (isMove) return;
-                
-                if (ViewController.instance.currentMode != ViewMode.MainRoom) return;
-                Vector3 world = cam.ScreenToWorldPoint(Input.mousePosition);
-                Vector2Int targetCell = GridMap.instance.WorldToGrid(world);
-                
-                KidAgent kid = KidsManager.instance.GetKidAgent(targetCell);
-                if (kid != null)
-                {
-                    kid.GotCaught();
-                    if (FindAdjacentCell(kid.CurrentCell, out Vector2Int adj))
-                    {
-                        var kidsOccupied = KidsManager.instance.GetOccupied();
-                        var desPath = PathManager.instance.FindPath(currentCell, adj, kidsOccupied);
-                        Debug.Log($"경로: {(desPath == null ? "null" : desPath.Count.ToString())}");
-                        if (desPath != null && desPath.Count > 0)
-                        {
-                            StopAllCoroutines();
-                            StartCoroutine(CatchRoutine(desPath, kid));
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("인접칸 못 찾음");
-                    }
-                    return;
-                }
-
-                var cell = GridMap.instance.GetCell(targetCell.x, targetCell.y);
-                
-                if (cell == null) return;
-                if (cell.zone != ZoneType.MainRoom) return;
-                if (!cell.IsWalkable) return;
-                if (GridMap.instance.IsDoor(targetCell.x, targetCell.y)) return;
-                
-                var occupied = KidsManager.instance.GetOccupied();
-                var path = PathManager.instance.FindPath(currentCell, targetCell, occupied);
-                if (path != null && path.Count > 0)
-                {
-                    StopAllCoroutines();
-                    StartCoroutine(FollowPath(path));
-                }
-            }
-        }
-#elif UNITY_EDITOR
-*/
-        
+#if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0) && RoundManager.instance.roundStart)
         {
             if (EventSystem.current.IsPointerOverGameObject()) return;
@@ -135,7 +80,57 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(FollowPath(path));
             }
         }
-//#endif
+        
+#elif UNITY_ANDROID
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
+                if (isMove) return;
+                
+                if (ViewController.instance.currentMode != ViewMode.MainRoom) return;
+                Vector3 world = cam.ScreenToWorldPoint(Input.mousePosition);
+                Vector2Int targetCell = GridMap.instance.WorldToGrid(world);
+                
+                KidAgent kid = KidsManager.instance.GetKidAgent(targetCell);
+                if (kid != null)
+                {
+                    kid.GotCaught();
+                    if (FindAdjacentCell(kid.CurrentCell, out Vector2Int adj))
+                    {
+                        var kidsOccupied = KidsManager.instance.GetOccupied();
+                        var desPath = PathManager.instance.FindPath(currentCell, adj, kidsOccupied);
+                        if (desPath != null && desPath.Count > 0)
+                        {
+                            StopAllCoroutines();
+                            StartCoroutine(CatchRoutine(desPath, kid));
+                        }
+                    }
+
+                    roundUI.OpenStatusBox(kid);
+                    return;
+                }
+
+                var cell = GridMap.instance.GetCell(targetCell.x, targetCell.y);
+                
+                if (cell == null) return;
+                if (cell.zone != ZoneType.MainRoom) return;
+                if (!cell.IsWalkable) return;
+                if (GridMap.instance.IsDoor(targetCell.x, targetCell.y)) return;
+                
+                roundUI.CloseStatusBox();
+                var occupied = KidsManager.instance.GetOccupied();
+                var path = PathManager.instance.FindPath(currentCell, targetCell, occupied);
+                if (path != null && path.Count > 0)
+                {
+                    StopAllCoroutines();
+                    StartCoroutine(FollowPath(path));
+                }
+            }
+        }
+#endif
     }
 
     private IEnumerator FollowPath(List<Vector2Int> path)

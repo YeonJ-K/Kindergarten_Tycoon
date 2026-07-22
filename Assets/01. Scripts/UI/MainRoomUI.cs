@@ -32,11 +32,16 @@ public class MainRoomUI : MonoBehaviour
     [SerializeField] private Image hungryTimeImg;
     [SerializeField] private Image toiletTimeImg;
     [SerializeField] private Image sleepTimeImg;
+    [SerializeField] private GameObject hungryTimerBox;
+    [SerializeField] private GameObject toiletTimerBox;
+    [SerializeField] private GameObject sleepTimerBox;
 
     public void InitUI()
     {
         statusBoxRT.anchoredPosition = offPos;
-
+        hungryTimerBox.SetActive(false);
+        toiletTimerBox.SetActive(false);
+        sleepTimerBox.SetActive(false);
     }
 
     public void SettingStatusBox(NeedType type, NeedLevel level, string kidsName)
@@ -118,5 +123,52 @@ public class MainRoomUI : MonoBehaviour
         }
     }
 
+    public void SettingTimer(NeedType type, float timeValue)
+    {
+        switch (type)
+        {
+            case NeedType.Hunger:
+                hungryTimeImg.fillAmount = timeValue;
+                break;
+            case NeedType.Toilet:
+                toiletTimeImg.fillAmount = timeValue;
+                break;
+            case NeedType.Sleep:
+                sleepTimeImg.fillAmount = timeValue;
+                break;
+        }
+    }
+
+    public void OpenTimer(NeedType type)
+    {
+        switch (type)
+        {
+            case NeedType.Hunger:
+                hungryTimerBox.SetActive(true);
+                break;
+            case NeedType.Toilet:
+                toiletTimerBox.SetActive(true);
+                break;
+            case NeedType.Sleep:
+                sleepTimerBox.SetActive(true);
+                break;
+        }   
+    }
+    
+    public void CloseTimer(NeedType type)
+    {
+        switch (type)
+        {
+            case NeedType.Hunger:
+                hungryTimerBox.SetActive(false);
+                break;
+            case NeedType.Toilet:
+                toiletTimerBox.SetActive(false);
+                break;
+            case NeedType.Sleep:
+                sleepTimerBox.SetActive(false);
+                break;
+        }   
+    }
 }
 

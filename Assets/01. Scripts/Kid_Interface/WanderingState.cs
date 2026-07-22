@@ -11,19 +11,27 @@ public class WanderingState : IKidState
     public void Enter(KidsContext context)
     {
         context.needs.isActive = true;
-        Debug.Log("입장 완료. 요구 상태 단계 하락 기능 시작");
         context.timer = Random.Range(waitMin, waitMax);
     }
 
     public void Tick(KidsContext context, float deltaTime)
     {
-        for (int i = 0; i < context.needs.kidStatus.Length; i++)
+        if (context.needs.levelChanged)
         {
-            if (context.needs.kidStatus[i] <= NeedLevel.Normal)
+            context.needs.levelChanged = false;
+            NeedLevel worst = context.needs.GetWorst();
+            Debug.Log($"levelChanged 감지! worst={worst}, 현재감정={context.currentEmotion}");
+            KidEmotion newEmotion = (worst == NeedLevel.VeryBad) ? KidEmotion.Angry
+                : (worst <= NeedLevel.Normal) ? KidEmotion.Tired
+                : KidEmotion.Normal;
+            Debug.Log($"새 감정={newEmotion}");
+
+            if (newEmotion != context.currentEmotion)
             {
-                context.requestingNeed = (NeedType)i;
-                context.agent.RequestWait();
-                return;
+                context.currentEmotion = newEmotion;
+                if (newEmotion == KidEmotion.Angry) context.agent.Angry();
+                else if (newEmotion == KidEmotion.Tired) context.agent.RequestWait();
+                else context.agent.RequestClear();
             }
         }
         
