@@ -28,8 +28,6 @@ public class ExitingState : IKidState
                 context.agent.RequestPath(RoundManager.instance.kidsSpawnPos, occupied);
                 context.timer = 0.5f;
             }
-
-
         }
     }
 

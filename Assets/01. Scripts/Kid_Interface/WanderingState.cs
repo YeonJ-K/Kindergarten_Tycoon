@@ -16,15 +16,18 @@ public class WanderingState : IKidState
 
     public void Tick(KidsContext context, float deltaTime)
     {
+        if (context.needs.wantPlay)
+            RoundManager.instance.RequestPlaying(context.agent);
+        
+        // Moving To Zone에서 PlayRoom 가면 wantPlay = fasle 처리 하기
+        
         if (context.needs.levelChanged)
         {
             context.needs.levelChanged = false;
             NeedLevel worst = context.needs.GetWorst();
-            Debug.Log($"levelChanged 감지! worst={worst}, 현재감정={context.currentEmotion}");
             KidEmotion newEmotion = (worst == NeedLevel.VeryBad) ? KidEmotion.Angry
                 : (worst <= NeedLevel.Normal) ? KidEmotion.Tired
                 : KidEmotion.Normal;
-            Debug.Log($"새 감정={newEmotion}");
 
             if (newEmotion != context.currentEmotion)
             {

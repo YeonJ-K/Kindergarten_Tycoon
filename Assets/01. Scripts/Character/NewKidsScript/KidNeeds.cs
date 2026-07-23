@@ -1,5 +1,6 @@
 using UnityEngine;
 using Infos;
+using UnityEditor.Searcher;
 
 public class KidNeeds
 {
@@ -14,7 +15,9 @@ public class KidNeeds
     private float stressTimer;
     public bool levelChanged;
     public bool isActive;
-    
+
+    public bool wantPlay { get; private set; }
+
 
     public KidNeeds()
     {
@@ -42,18 +45,21 @@ public class KidNeeds
         levelDropTimer -= dt;
         if (levelDropTimer <= 0f)
         {
+            if (!RoundManager.instance.beforePlay)
+                PlayRequestProcess();
             LevelDrop();
             levelDropTimer = GetLevelDropTime();
         }
         
         WaitRequestProcess(dt);
         StressProcess(dt);
-        
     }
 
     // 6초마다 호출. 아주 좋음, 좋음 단계에서만 해당 기능 실행
     private void LevelDrop()
     {
+        if (wantPlay) return;
+        
         if (Random.value < 0.5f)
         {
             int dropTypePick = Random.Range(0, 3);
@@ -74,7 +80,19 @@ public class KidNeeds
         return limitTimer[(int)type] / requestTime;    
     }
 
-    
+    private void PlayRequestProcess()
+    {
+        if (RoundManager.instance.beforePlay) return;
+
+        for (int i = 0; i < kidStatus.Length; i++)
+            if (kidStatus[i] <= NeedLevel.Normal)
+                return;
+
+        if (Random.value < 0.2f)
+        {
+            wantPlay = true;
+        }
+    }
 
     private void WaitRequestProcess(float dt)
     {

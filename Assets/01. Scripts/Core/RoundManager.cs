@@ -21,8 +21,14 @@ public class RoundManager : MonoBehaviour
     
     public bool roundStart { get; private set; }
     public int StressCount { get; private set; }
+    
+    // 미니게임 변수
     public int MiniGameMoney { get; private set; }
     public bool isMiniGamePlaying { get;  private set; }
+    public bool beforePlay { get; private set; }
+    private float playCoolTime;
+    public bool isWin { get; private set; }
+    private KidAgent miniGameKid;
 
     private void Awake()
     {
@@ -33,6 +39,7 @@ public class RoundManager : MonoBehaviour
         }
         instance = this;
         MiniGameMoney = 0;
+        beforePlay = false;
         isMiniGamePlaying = false;
         
         // 임시 값 
@@ -48,6 +55,16 @@ public class RoundManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(RoundRoutine());
+    }
+
+    void Update()
+    {
+        if (playCoolTime > 0f)
+        {
+            playCoolTime -= Time.deltaTime;
+            if (playCoolTime <= 0f)
+                beforePlay = false;
+        }
     }
 
     private IEnumerator RoundRoutine()
@@ -133,7 +150,14 @@ public class RoundManager : MonoBehaviour
     public void IncreaseStress() => StressCount++;
     public void GetMiniGameMoney(int money)=> MiniGameMoney += money;
     public void SetMiniGamePlaying(bool isPlaying) => isMiniGamePlaying = isPlaying;
-    
-    
+    public void SetGameResult(bool result) => isWin = result;
 
+    public void RequestPlaying(KidAgent kid)
+    {
+        beforePlay = true;
+        playCoolTime = 60f;
+
+        miniGameKid = kid;
+        // 여기서 어떤 게임을 틀어줄지 정해야 한다.
+    }
 }

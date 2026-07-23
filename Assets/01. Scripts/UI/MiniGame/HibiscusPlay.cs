@@ -36,7 +36,7 @@ public class HibiscusPlay : MonoBehaviour
     {
         // 임시
         playTime = 30f;
-        rewardMoney = 200;
+        rewardMoney = 300;
         // ----
     }
 
@@ -155,6 +155,7 @@ public class HibiscusPlay : MonoBehaviour
         resultTxt.color = Color.red;
         resultExplainTxt.text = "스트레스 수치에서 1 증가합니다.";
         RoundManager.instance.IncreaseStress();
+        RoundManager.instance.SetGameResult(false);
     }
 
     private void Win()
@@ -166,12 +167,13 @@ public class HibiscusPlay : MonoBehaviour
         resultTxt.color = Color.blue;
         resultExplainTxt.text = $"정산시 보상금이 {rewardMoney}원 추가됩니다.";
         RoundManager.instance.GetMiniGameMoney(rewardMoney);
+        RoundManager.instance.SetGameResult(true);
     }
 
     public void ExitGame()
     {
         RoundManager.instance.SetMiniGamePlaying(false);
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
 }

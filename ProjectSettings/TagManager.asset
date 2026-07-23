@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Kid
   - UI
+  - Card
   layers:
   - Default
   - TransparentFX
