@@ -20,7 +20,6 @@ namespace YEONJI.Kindergarten
         public static ResourceManager RSS { get => Instance.Get<ResourceManager>(); }
         
         [HideInInspector] public static bool isCoreReady = false;
-        [HideInInspector] public static bool isGamePlay = false;
 
         // ------- Init
         
@@ -30,7 +29,12 @@ namespace YEONJI.Kindergarten
             return managerDict.ContainsKey(type) ? managerDict[type] as T : null;
         }
 
-        public async void Start()
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
+        private async void Start()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             Application.targetFrameRate = 60; // 프레임 고정

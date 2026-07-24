@@ -90,19 +90,18 @@ namespace YEONJI.Kindergarten
             {
                 if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
                 if (isMove) return;
-                
-                if (ViewController.instance.currentMode != ViewMode.MainRoom) return;
+                if (InGameCore.VIEWER.currentMode != ViewMode.MainRoom) return;
                 Vector3 world = cam.ScreenToWorldPoint(Input.mousePosition);
                 Vector2Int targetCell = InGameCore.GRID.WorldToGrid(world);
-                
-                KidAgent kid = KidsManager.instance.GetKidAgent(targetCell);
+
+                KidAgent kid = InGameCore.KIDS.GetKidAgent(targetCell);
                 if (kid != null)
                 {
                     kid.GotCaught();
                     if (FindAdjacentCell(kid.CurrentCell, out Vector2Int adj))
                     {
-                        var kidsOccupied = KidsManager.instance.GetOccupied();
-                        var desPath = PathManager.instance.FindPath(currentCell, adj, kidsOccupied);
+                        var kidsOccupied = InGameCore.KIDS.GetOccupied();
+                        var desPath = PathFinder.FindPath(InGameCore.GRID, currentCell, adj, kidsOccupied);
                         if (desPath != null && desPath.Count > 0)
                         {
                             StopAllCoroutines();
@@ -115,15 +114,15 @@ namespace YEONJI.Kindergarten
                 }
 
                 var cell = InGameCore.GRID.GetCell(targetCell.x, targetCell.y);
-                
+
                 if (cell == null) return;
                 if (cell.zone != ZoneType.MainRoom) return;
                 if (!cell.IsWalkable) return;
                 if (InGameCore.GRID.IsDoor(targetCell.x, targetCell.y)) return;
-                
+
                 roundUI.CloseStatusBox();
-                var occupied = KidsManager.instance.GetOccupied();
-                var path = PathManager.instance.FindPath(currentCell, targetCell, occupied);
+                var occupied = InGameCore.KIDS.GetOccupied();
+                var path = PathFinder.FindPath(InGameCore.GRID, currentCell, targetCell, occupied);
                 if (path != null && path.Count > 0)
                 {
                     StopAllCoroutines();

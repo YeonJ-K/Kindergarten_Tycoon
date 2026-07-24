@@ -11,6 +11,7 @@ namespace YEONJI.Kindergarten
     public class RoundManager : BaseManager
     {
         [SerializeField] private GameObject[] playerPrefab; // 나중에 데이터 시트로 가져오기?
+
         private Vector2Int playerSpawn;
         public Vector2Int kidsSpawnPos { get; private set; }
 
@@ -37,12 +38,12 @@ namespace YEONJI.Kindergarten
 
         public override void Init()
         {
-            
             MiniGameMoney = 0;
             beforePlay = false;
             isMiniGamePlaying = false;
             TempInit();
             base.Init();
+
         }
 
          // 임시 초기화 나중에 제거할 영역
@@ -56,11 +57,7 @@ namespace YEONJI.Kindergarten
             roundPerKids = 3;
             // -----
         }
-
-        private void Start()
-        {
-            StartCoroutine(RoundRoutine());
-        }
+        
 
         void Update()
         {
@@ -76,9 +73,11 @@ namespace YEONJI.Kindergarten
                 if (!isMiniGamePlaying)
                     miniGameKid.finishGame();
             }
+        }
 
-
-
+        public void StartRound()
+        {
+            StartCoroutine(RoundRoutine());
         }
 
         private IEnumerator RoundRoutine()
@@ -96,7 +95,7 @@ namespace YEONJI.Kindergarten
 
         private void SpawnPlayer()
         {
-            GameObject go = Instantiate(GameInfo.instance.userSex == UserSex.Male ? playerPrefab[0] : playerPrefab[1],
+            GameObject go = Instantiate(GameCore.DATA.userSex == UserSex.Male ? playerPrefab[0] : playerPrefab[1],
                 InGameCore.GRID.GridToWorld(playerSpawn.x, playerSpawn.y), Quaternion.identity);
             InGameCore.KIDS.SetPlayer(go.GetComponent<PlayerController>());
         }

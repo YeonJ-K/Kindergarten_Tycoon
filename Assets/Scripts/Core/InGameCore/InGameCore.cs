@@ -17,10 +17,8 @@ namespace YEONJI.Kindergarten
         public static CamViewManager VIEWER => Instance.Get<CamViewManager>();
         public static FurnitureManager FUR => Instance.Get<FurnitureManager>();
         public static KidsAIManager AI => Instance.Get<KidsAIManager>();
-
-        
-        [HideInInspector] public static bool isCoreReady = false;
-        [HideInInspector] public static bool isGamePlay = false;
+        protected override bool IsPersistent => false;
+        [HideInInspector] public static bool isGameReady = false;
  // ------- Init
         
         public T Get<T>() where T : BaseManager
@@ -28,14 +26,11 @@ namespace YEONJI.Kindergarten
             var type = typeof(T);
             return managerDict.ContainsKey(type) ? managerDict[type] as T : null;
         }
-
-        public async void Start()
+        
+        private async void Start()
         {
-
+            await UniTask.WaitUntil(() => GameCore.isCoreReady);
             managerDict.Clear();
-            // 로딩하기
-
-            float gauge = 0;
 
             for (int i = 0; i < inGameManagers.Count; i++)
             {
@@ -44,18 +39,14 @@ namespace YEONJI.Kindergarten
                 var type = inGameManagers[i].GetType();
                 managerDict.Add(type, inGameManagers[i]);
 
-                gauge += 5;
-                //CanvasRoot.instance.SetLoadingGaugeText(gauge);
             }
-
-            await UniTask.Delay(500);
-            //CanvasRoot.instance.SetLoadingGaugeText(70);
-
-            // StaticGameData.Init();
+            
             for (int i = 0; i < inGameManagers.Count; i++)
                 inGameManagers[i].Init();
-
-            isCoreReady = true;
+            isGameReady = true;
+            
+            // 임시
+            ROUND.StartRound();
         }
         
     }

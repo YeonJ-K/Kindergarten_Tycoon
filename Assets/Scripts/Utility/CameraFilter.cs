@@ -10,10 +10,16 @@ namespace YEONJI.Kindergarten
         Camera cam;
         private Rect lastSafeArea;
 
-        void Start()
+        private void Awake()
+        {
+            enabled = false;
+        }
+
+        public void Init()
         {
             cam = GetComponent<Camera>();
             Apply();
+            enabled = true;
         }
 
         void Update()

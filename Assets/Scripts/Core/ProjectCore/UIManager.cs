@@ -28,6 +28,11 @@ namespace YEONJI.Kindergarten
         public override void Init()
         {
             SetMainCamera();
+            if (CanvasRoot.instance == null)
+            {
+                // CanvasRoot를 찾을 수 없습니다. 로깅
+            }
+
             SetTrUIParent(CanvasRoot.instance.trScreenParent, CanvasRoot.instance.trPopupParent, CanvasRoot.instance.trHudParent);
             base.Init();
             

@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace YEONJI.Kindergarten
 {
-    public class RooDecorate : MonoBehaviour
+    public class RoomDecorate : MonoBehaviour
     {
         [SerializeField] RoomTheme theme;
 
-        private void Start()
+        public void Init()
         {
             if (theme == null)
                 return;

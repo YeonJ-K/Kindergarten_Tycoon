@@ -34,14 +34,13 @@ namespace YEONJI.Kindergarten
         public string sortingLayer = "Default";
 
         [Header("옵션")]
-        public bool buildOnStart = true;
         public bool showDebugLabels = true;
 
         Dictionary<Vector2Int, WallPiece> placed = new();
-
-        void Start()
+        
+        public void Init()
         {
-            if (buildOnStart) BuildWalls();
+            BuildWalls();
         }
 
         public void BuildWalls()

@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace YEONJI.Kindergarten
 {
-    public class HibiscusPlay : MonoBehaviour
+    public class MiniGame_HibiscusPlay : MonoBehaviour
     {
         [SerializeField] private GameObject startBox;
         [SerializeField] private GameObject explainBox;

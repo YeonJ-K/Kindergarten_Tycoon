@@ -5,6 +5,7 @@ namespace YEONJI.Kindergarten
     public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static T instance = null;
+        protected virtual bool IsPersistent => true;
 
         public static T Instance
         {
@@ -28,9 +29,10 @@ namespace YEONJI.Kindergarten
             }
         }
 
-        public void Awake()
+        protected virtual void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+           if (IsPersistent)
+               DontDestroyOnLoad(gameObject);   
         }
 
         public static T GetInstance() => instance;

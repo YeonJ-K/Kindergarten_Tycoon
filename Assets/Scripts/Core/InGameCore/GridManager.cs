@@ -25,15 +25,20 @@ namespace YEONJI.Kindergarten
 
     public class GridManager : BaseManager
     {
-        [Header("맵 크기")] public int mapWidth = 11; // 추후에 값은 데이터 시트로 받아온다.
+        [Header("맵 크기")] 
+        public int mapWidth = 11; // 추후에 값은 데이터 시트로 받아온다.
         public int mapHeight = 7;
         public float cellSize = 1f;
 
-        [Header("Sections")] public List<ZoneRect> presetZones = new();
-
+        [Header("Sections")] 
+        public List<ZoneRect> presetZones = new();
         private GridCell[,] cells;
         private HashSet<(Vector2Int, Vector2Int)> doorPairs = new();
         private HashSet<Vector2Int> doors = new();
+        
+        [SerializeField] private WallBuilder wallBuilder;
+        [SerializeField] private RoomDecorate roomDecorate;
+        [SerializeField] private CameraFilter camFilter;
 
         private static readonly Vector2Int[] dirs =
         {
@@ -48,15 +53,12 @@ namespace YEONJI.Kindergarten
 
         public override void Init()
         {
-            base.Init();
-        }
-        
-
-        void Awake()
-        {
-
             BuildGrid();
             BuildDoorPairs();
+            wallBuilder.Init();
+            roomDecorate.Init();
+            camFilter.Init();
+            base.Init();
         }
 
         private void BuildGrid()
