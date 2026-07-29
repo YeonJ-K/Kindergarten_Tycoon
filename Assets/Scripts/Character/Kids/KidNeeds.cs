@@ -48,7 +48,7 @@ namespace YEONJI.Kindergarten
             if (levelDropTimer <= 0f)
             {
                 if (!InGameCore.ROUND.beforePlay)
-                    PlayRequestProcess();
+                    RequestPlayProcess();
                 LevelDrop();
                 levelDropTimer = GetLevelDropTime();
             }
@@ -82,7 +82,7 @@ namespace YEONJI.Kindergarten
             return limitTimer[(int)type] / requestTime;
         }
 
-        private void PlayRequestProcess()
+        private void RequestPlayProcess()
         {
             if (InGameCore.ROUND.beforePlay) return;
 
@@ -161,6 +161,16 @@ namespace YEONJI.Kindergarten
             }
 
             return worst;
+        }
+
+        public void Recovery(NeedType type)
+        {
+            if (Get(type) == NeedLevel.VeryBad)
+                kidStatus[(int)type] = NeedLevel.Good;
+            else if (Get(type) >= NeedLevel.Bad && Get(type) < NeedLevel.Good)
+                kidStatus[(int)type] = NeedLevel.VeryGood;
+  
+            limitTimer[(int)type] = 0f;
         }
     }
 }

@@ -81,22 +81,38 @@ namespace YEONJI.Kindergarten
 
         public void ClickToiletButton()
         {
-            
+            if (selectedKid == null) return;
+            if (selectedKid.Context.needs.Get(NeedType.Toilet) > NeedLevel.Normal) return;
+            selectedKid.Context.playerProcessNeed = NeedType.Toilet;
+            selectedKid.Context.machine.ChangeState(new MovingToZoneState());
+            CloseStatusBox();
         }
         
         public void ClickKitchenButton()
         {
-            
+            if (selectedKid == null) return;
+            if (selectedKid.Context.needs.Get(NeedType.Hunger) > NeedLevel.Normal) return;
+            selectedKid.Context.playerProcessNeed = NeedType.Hunger;
+            selectedKid.Context.machine.ChangeState(new MovingToZoneState());
+            CloseStatusBox();
         }
 
         public void ClickPlayRoomButton()
         {
-            
+            if (selectedKid == null) return;
+            if (!selectedKid.Context.needs.wantPlay) return;
+            selectedKid.Context.playerProcessNeed = NeedType.None;
+            selectedKid.Context.machine.ChangeState(new MovingToZoneState());
+            CloseStatusBox();
         }
 
         public void ClickSleepRoomButton()
         {
-            
+            if (selectedKid == null) return;
+            if (selectedKid.Context.needs.Get(NeedType.Sleep) > NeedLevel.Normal) return;
+            selectedKid.Context.playerProcessNeed = NeedType.Sleep;
+            selectedKid.Context.machine.ChangeState(new MovingToZoneState());
+            CloseStatusBox();
         }
     }
 }

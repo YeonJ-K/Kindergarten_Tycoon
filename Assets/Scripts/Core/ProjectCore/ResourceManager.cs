@@ -14,5 +14,7 @@ namespace YEONJI.Kindergarten
         {
             base.Init();
         }
+        
+        public TextAsset LoadText(string path) => Resources.Load<TextAsset>(path);
     }
 }

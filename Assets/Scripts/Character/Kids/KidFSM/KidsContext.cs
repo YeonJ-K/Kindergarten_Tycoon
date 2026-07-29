@@ -16,10 +16,11 @@ namespace YEONJI.Kindergarten
         public float timer;
         public Vector2Int desCell;
         public bool wantExit;
-        public NeedType requestingNeed;
+        public NeedType playerProcessNeed;
         public bool releaseWaiting;
         public KidEmotion currentEmotion;
         public KidAgent agent;
+        public ActiveFurniture usingFurniture;
         public StateMachine machine;
         public KidNeeds needs = new();
     }

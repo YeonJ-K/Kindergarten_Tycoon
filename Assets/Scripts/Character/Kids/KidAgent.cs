@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
 namespace YEONJI.Kindergarten
@@ -12,6 +13,7 @@ namespace YEONJI.Kindergarten
     {
         [SerializeField] private GameObject RequestBubble;
         [SerializeField] private GameObject wantPlayBubble;
+        [SerializeField] private SortingGroup sortingGroup;
 
         // 애니메이션 관련 변수
         private Animator animator;
@@ -75,6 +77,8 @@ namespace YEONJI.Kindergarten
             segEnd = InGameCore.GRID.GridToWorld(cell.x, cell.y);
             Vector3 dir = segEnd - segStart;
 
+            Debug.Log($"BeginSegment dir: {dir.x}, {dir.y}");
+
             // 애니메이션 설정
             animator.SetFloat("MoveX", dir.x);
             animator.SetFloat("MoveY", dir.y);
@@ -127,6 +131,7 @@ namespace YEONJI.Kindergarten
             if (percent < 1)
             {
                 transform.position = Vector3.Lerp(segStart, segEnd, percent);
+                sortingGroup.sortingOrder = Mathf.RoundToInt(-transform.position.y * 100);
                 return;
             }
 
@@ -207,6 +212,16 @@ namespace YEONJI.Kindergarten
             emotionTimer = 0.5f;
         }
 
+        public void RequestProcessing()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void RequestProcessingFinish()
+        {
+            gameObject.SetActive(true);
+        }
+
         public void StopMove()
         {
             IsMove = false;
@@ -219,6 +234,8 @@ namespace YEONJI.Kindergarten
             RequestBubble.SetActive(false);
             animator.SetBool("isTired", false);
             animator.SetBool("isAngry", false);
+            animator.SetFloat("MoveX", 0f);
+            animator.SetFloat("MoveY", -1f);
         }
 
         public void Angry()

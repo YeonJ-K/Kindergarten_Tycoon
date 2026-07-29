@@ -17,7 +17,7 @@ namespace YEONJI.Kindergarten
         public static CamViewManager VIEWER => Instance.Get<CamViewManager>();
         public static FurnitureManager FUR => Instance.Get<FurnitureManager>();
         public static KidsAIManager AI => Instance.Get<KidsAIManager>();
-        protected override bool IsPersistent => false;
+        protected bool IsPersistent => false;
         [HideInInspector] public static bool isGameReady = false;
  // ------- Init
         

@@ -1,0 +1,486 @@
+﻿{
+    "actives": [
+        {
+            "id": 0,
+            "type": 0,
+            "furnitureName": "Toilet01",
+            "spritePath": "Sprites/Objects/furniture/Toilet01",
+            "width": 1,
+            "height": 2,
+            "price": 700,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 1
+            },
+            "usingPos": [
+                {
+                    "x": 0,
+                    "y": 0
+                }
+            ],
+            "processNeed": 1,
+            "availableKidCount": 1,
+            "usingSec": 8.0
+        },
+        {
+            "id": 1,
+            "type": 0,
+            "furnitureName": "Toilet02",
+            "spritePath": "Sprites/Objects/furniture/Toilet02",
+            "width": 1,
+            "height": 2,
+            "price": 700,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 1
+            },
+            "usingPos": [
+                {
+                    "x": 0,
+                    "y": 0
+                }
+            ],
+            "processNeed": 1,
+            "availableKidCount": 1,
+            "usingSec": 6.0
+        },
+        {
+            "id": 2,
+            "type": 0,
+            "furnitureName": "Bedding01",
+            "spritePath": "Sprites/Objects/furniture/Bedding01",
+            "width": 1,
+            "height": 3,
+            "price": 800,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 2
+            },
+            "usingPos": [
+                {
+                    "x": 0,
+                    "y": 0
+                }
+            ],
+            "processNeed": 2,
+            "availableKidCount": 1,
+            "usingSec": 13.0
+        },
+        {
+            "id": 3,
+            "type": 0,
+            "furnitureName": "Bedding02",
+            "spritePath": "Sprites/Objects/furniture/Bedding02",
+            "width": 1,
+            "height": 3,
+            "price": 1400,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 2
+            },
+            "usingPos": [
+                {
+                    "x": 0,
+                    "y": 0
+                }
+            ],
+            "processNeed": 2,
+            "availableKidCount": 1,
+            "usingSec": 10.0
+        },
+        {
+            "id": 4,
+            "type": 0,
+            "furnitureName": "Table01",
+            "spritePath": "Sprites/Objects/furniture/Table01",
+            "width": 2,
+            "height": 2,
+            "price": 1200,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "usingPos": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                }
+            ],
+            "processNeed": 0,
+            "availableKidCount": 2,
+            "usingSec": 10.0
+        },
+        {
+            "id": 5,
+            "type": 0,
+            "furnitureName": "Table02",
+            "spritePath": "Sprites/Objects/furniture/Table02",
+            "width": 3,
+            "height": 2,
+            "price": 2000,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "usingPos": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 1
+                }
+            ],
+            "processNeed": 0,
+            "availableKidCount": 3,
+            "usingSec": 10.0
+        }
+    ],
+    "inactives": [
+        {
+            "id": 100,
+            "type": 1,
+            "furnitureName": "Plant01",
+            "spritePath": "Sprites/Objects/furniture/Plant01",
+            "width": 1,
+            "height": 1,
+            "price": 300,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 1,
+            "satisfiedZone": 0,
+            "setId": 0
+        },
+        {
+            "id": 101,
+            "type": 1,
+            "furnitureName": "Plant02",
+            "spritePath": "Sprites/Objects/furniture/Plant02",
+            "width": 1,
+            "height": 1,
+            "price": 300,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 1,
+            "satisfiedZone": 0,
+            "setId": 0
+        },
+        {
+            "id": 102,
+            "type": 1,
+            "furnitureName": "Crayons",
+            "spritePath": "Sprites/Objects/furniture/Crayons",
+            "width": 1,
+            "height": 1,
+            "price": 300,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 1,
+            "satisfiedZone": 0,
+            "setId": 0
+        },
+        {
+            "id": 103,
+            "type": 1,
+            "furnitureName": "ShoesStorage",
+            "spritePath": "Sprites/Objects/furniture/ShoesStorage",
+            "width": 2,
+            "height": 1,
+            "price": 900,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 2,
+            "satisfiedZone": 1,
+            "setId": 1
+        },
+        {
+            "id": 104,
+            "type": 1,
+            "furnitureName": "Umbrellas",
+            "spritePath": "Sprites/Objects/furniture/Umbrellas",
+            "width": 1,
+            "height": 1,
+            "price": 600,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 1,
+            "satisfiedZone": 1,
+            "setId": 1
+        },
+        {
+            "id": 105,
+            "type": 1,
+            "furnitureName": "WhiteBoard",
+            "spritePath": "Sprites/Objects/furniture/WhiteBoard",
+            "width": 2,
+            "height": 1,
+            "price": 900,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 2,
+            "satisfiedZone": 2,
+            "setId": 0
+        },
+        {
+            "id": 106,
+            "type": 1,
+            "furnitureName": "Storage",
+            "spritePath": "Sprites/Objects/furniture/Storage",
+            "width": 2,
+            "height": 1,
+            "price": 1000,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 3,
+            "satisfiedZone": 2,
+            "setId": 0
+        },
+        {
+            "id": 107,
+            "type": 1,
+            "furnitureName": "CDPlayer",
+            "spritePath": "Sprites/Objects/furniture/CDPlayer",
+            "width": 1,
+            "height": 1,
+            "price": 700,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 1,
+            "satisfiedZone": 2,
+            "setId": 0
+        },
+        {
+            "id": 108,
+            "type": 1,
+            "furnitureName": "HandWasher",
+            "spritePath": "Sprites/Objects/furniture/HandWasher",
+            "width": 2,
+            "height": 1,
+            "price": 1700,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 4,
+            "satisfiedZone": 3,
+            "setId": 2
+        },
+        {
+            "id": 109,
+            "type": 1,
+            "furnitureName": "TowelBox",
+            "spritePath": "Sprites/Objects/furniture/TowelBox",
+            "width": 1,
+            "height": 1,
+            "price": 900,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 2,
+            "satisfiedZone": 3,
+            "setId": 2
+        },
+        {
+            "id": 110,
+            "type": 1,
+            "furnitureName": "BathRoomStair",
+            "spritePath": "Sprites/Objects/furniture/BathRoomStair",
+            "width": 1,
+            "height": 1,
+            "price": 900,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 2,
+            "satisfiedZone": 3,
+            "setId": 2
+        },
+        {
+            "id": 111,
+            "type": 1,
+            "furnitureName": "TrashBox",
+            "spritePath": "Sprites/Objects/furniture/TrashBox",
+            "width": 1,
+            "height": 1,
+            "price": 700,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 2,
+            "satisfiedZone": 3,
+            "setId": 0
+        },
+        {
+            "id": 112,
+            "type": 1,
+            "furnitureName": "PaintBook",
+            "spritePath": "Sprites/Objects/furniture/PaintBook",
+            "width": 1,
+            "height": 1,
+            "price": 400,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 1,
+            "satisfiedZone": 4,
+            "setId": 3
+        },
+        {
+            "id": 113,
+            "type": 1,
+            "furnitureName": "Blocks",
+            "spritePath": "Sprites/Objects/furniture/Blocks",
+            "width": 1,
+            "height": 1,
+            "price": 600,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 1,
+            "satisfiedZone": 4,
+            "setId": 3
+        },
+        {
+            "id": 114,
+            "type": 1,
+            "furnitureName": "TeddyBear",
+            "spritePath": "Sprites/Objects/furniture/TeddyBear",
+            "width": 1,
+            "height": 1,
+            "price": 700,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 1,
+            "satisfiedZone": 4,
+            "setId": 3
+        },
+        {
+            "id": 115,
+            "type": 1,
+            "furnitureName": "Light",
+            "spritePath": "Sprites/Objects/furniture/Light",
+            "width": 1,
+            "height": 1,
+            "price": 700,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 2,
+            "satisfiedZone": 5,
+            "setId": 0
+        },
+        {
+            "id": 116,
+            "type": 1,
+            "furnitureName": "Water",
+            "spritePath": "Sprites/Objects/furniture/Water",
+            "width": 1,
+            "height": 1,
+            "price": 900,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 2,
+            "satisfiedZone": 6,
+            "setId": 0
+        },
+        {
+            "id": 117,
+            "type": 1,
+            "furnitureName": "Refrige",
+            "spritePath": "Sprites/Objects/furniture/Refrige",
+            "width": 1,
+            "height": 1,
+            "price": 1200,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 3,
+            "satisfiedZone": 6,
+            "setId": 4
+        },
+        {
+            "id": 118,
+            "type": 1,
+            "furnitureName": "Counter",
+            "spritePath": "Sprites/Objects/furniture/Counter",
+            "width": 2,
+            "height": 1,
+            "price": 900,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 2,
+            "satisfiedZone": 6,
+            "setId": 4
+        },
+        {
+            "id": 119,
+            "type": 1,
+            "furnitureName": "Sink",
+            "spritePath": "Sprites/Objects/furniture/Sink",
+            "width": 2,
+            "height": 1,
+            "price": 1300,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 3,
+            "satisfiedZone": 6,
+            "setId": 4
+        },
+        {
+            "id": 999,
+            "type": 1,
+            "furnitureName": "EnterRug",
+            "spritePath": "Sprites/Objects/furniture/EnterRug",
+            "width": 1,
+            "height": 1,
+            "price": 0,
+            "spritePlacePos": {
+                "x": 0,
+                "y": 0
+            },
+            "satisfaction": 0,
+            "satisfiedZone": 0,
+            "setId": 0
+        }
+    ]
+}

@@ -102,10 +102,10 @@ namespace YEONJI.Kindergarten
 
         private void SetKidsSpawnPos()
         {
-            InGameCore.GRID.GetZoneBounds(ZoneType.Entrance, out var min, out var max);
+            InGameCore.GRID.GetZoneBounds(ZoneType.Enterance, out var min, out var max);
             int x = (min.x + max.x) / 2;
             int y = max.y;
-            if (InGameCore.GRID.GetCell(x, y).zone != ZoneType.Entrance) return;
+            if (InGameCore.GRID.GetCell(x, y).zone != ZoneType.Enterance) return;
             kidsSpawnPos = new Vector2Int(x, y);
         }
 

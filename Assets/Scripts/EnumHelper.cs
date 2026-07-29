@@ -33,13 +33,14 @@ namespace YEONJI.Kindergarten
         MiniGame_FindCardPlay,
         [UIAttrType("Popup/MiniGame/MiniGame_HibiscusPlay")]
         MiniGame_HibiscusPlay,
-        
+        [UIAttrType("UI/LoadingUI")]
+        LoadingUI,
     }
     
     public enum Canvas_SortOrder
     {
-        [EnumName("화면")] SCREEN = 100,
-        [EnumName("허드")] HUD = 1000,
+        [EnumName("화면")] SCREEN = 1000,
+        [EnumName("허드")] HUD = 2000,
         [EnumName("팝업")] POPUP = 3000,
     }
 
@@ -86,7 +87,7 @@ namespace YEONJI.Kindergarten
     public enum ZoneType
     {
         None,
-        Entrance,
+        Enterance,
         MainRoom,
         RestRoom,
         PlayRoom,
@@ -147,6 +148,7 @@ namespace YEONJI.Kindergarten
 
     public enum NeedType
     {
+        None = -1,
         Hunger,
         Toilet,
         Sleep,
@@ -158,6 +160,12 @@ namespace YEONJI.Kindergarten
         EASY,
         NORMAL,
         HARD
+    }
+
+    public enum FurnitureType
+    {
+        Active,
+        InActive
     }
 
     public enum ActiveFurnitureId

@@ -197,26 +197,35 @@ namespace YEONJI.Kindergarten
         }
 
         // 가구 배치 가능한지
-        public bool CanPlaceFurniture(Vector2Int anchor, int width, int height, ZoneType zone)
+        public bool CanPlace(List<Vector2Int> cells)
         {
-            for (int i = anchor.x; i < width; i++)
+            foreach (Vector2Int c in cells)
             {
-                for (int j = anchor.y; j < height; j++)
-                {
-                    if (!InBounds(i, j)) return false;
-                    if (!IsWalkable(i, j)) return false;
-                    if (IsDoor(i, j)) return false;
-
-                    // 만약에 현관문의 위,아래,우측에 가구가 2방향에 있을때도 놓지 못하게 막는다. (게임 라운드 시작 방해하는 걸 막기) 
-                }
+                var cell = GetCell(c.x, c.y);
+                                    
+                if (cell == null) return false;
+                if (!cell.IsWalkable) return false;
+                if (IsDoor(c.x, c.y)) return false;
+                
+                // 만약에 현관문의 위,아래,우측에 가구가 2방향에 있을때도 놓지 못하게 막는다. (게임 라운드 시작 방해하는 걸 막기)
             }
 
-            return false;
+            return true;
         }
 
-        public void PlaceFurniture(Vector2Int ancher, int width, int height)
+        public void Place(List<Vector2Int> cells, int id)
         {
+            foreach (Vector2Int c in cells)
+            {
+                var cell = GetCell(c.x, c.y);
+                if (cell != null)
+                    cell.objectId = id;
+            }
+        }
 
+        public void RemoveFurniture(int id)
+        {
+            
         }
 
         public Vector3 GridToWorld(int x, int y)
@@ -283,7 +292,7 @@ namespace YEONJI.Kindergarten
             ZoneType.PlayRoom => new Color(1f, 0.8f, 0.4f, 0.4f),
             ZoneType.SleepRoom => new Color(1f, 0.5f, 0.7f, 0.4f),
             ZoneType.DiningRoom => new Color(0.5f, 1f, 0.5f, 0.4f),
-            ZoneType.Entrance => new Color(1f, 1f, 1f, 0.6f),
+            ZoneType.Enterance => new Color(1f, 1f, 1f, 0.6f),
             ZoneType.WallPaper => new Color(1f, 0f, 0f, 0.4f),
             _ => Color.clear,
         };

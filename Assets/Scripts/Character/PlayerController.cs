@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 
 namespace YEONJI.Kindergarten
 {
@@ -10,6 +11,7 @@ namespace YEONJI.Kindergarten
     {
         private float moveTime;
         Animator animator;
+        SortingGroup sortingGroup;
         private bool isMove;
         public bool IsMove => isMove;
         private Vector2Int currentCell;
@@ -22,6 +24,7 @@ namespace YEONJI.Kindergarten
         {
             cam = Camera.main;
             animator = GetComponent<Animator>();
+            sortingGroup = GetComponent<SortingGroup>();
             roundUI = GameObject.FindGameObjectWithTag("UI").GetComponent<GameRoundUI>();
             moveTime = 0.5f;
         }
@@ -176,6 +179,7 @@ namespace YEONJI.Kindergarten
                 current += Time.deltaTime;
                 percent = current / moveTime;
                 transform.position = Vector3.Lerp(start, end, percent);
+                sortingGroup.sortingOrder = Mathf.RoundToInt(-transform.position.y * 100);
                 yield return null;
             }
 
