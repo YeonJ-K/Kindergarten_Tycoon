@@ -17,7 +17,8 @@ namespace YEONJI.Kindergarten
         public static CamViewManager VIEWER => Instance.Get<CamViewManager>();
         public static FurnitureManager FUR => Instance.Get<FurnitureManager>();
         public static KidsAIManager AI => Instance.Get<KidsAIManager>();
-        protected bool IsPersistent => false;
+        public static EditorManager EDITOR => Instance.Get<EditorManager>();
+        protected override bool IsPersistent => false;
         [HideInInspector] public static bool isGameReady = false;
  // ------- Init
         
@@ -31,22 +32,24 @@ namespace YEONJI.Kindergarten
         {
             await UniTask.WaitUntil(() => GameCore.isCoreReady);
             managerDict.Clear();
-
+            
             for (int i = 0; i < inGameManagers.Count; i++)
             {
                 await inGameManagers[i].Task_Init();
 
                 var type = inGameManagers[i].GetType();
                 managerDict.Add(type, inGameManagers[i]);
-
+                float gauge = 50f + (float)(i+1) / inGameManagers.Count * 50f;
+                CanvasRoot.instance.SetLoadingGaugeText(gauge);
             }
             
             for (int i = 0; i < inGameManagers.Count; i++)
                 inGameManagers[i].Init();
             isGameReady = true;
-            
-            // 임시
-            ROUND.StartRound();
+            await UniTask.Delay(250);
+            CanvasRoot.instance.SetLoadingGaugeText(100);
+            await UniTask.Delay(500);
+            CanvasRoot.instance.SetLoadingIsOn(false);
         }
         
     }

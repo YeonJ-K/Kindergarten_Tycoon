@@ -91,6 +91,7 @@ namespace YEONJI.Kindergarten
     {
         public string userName;
         public UserSex userSex;
+        public int roomSatisfaction;
         public int level;
         public int levelPerKidsNum;
 

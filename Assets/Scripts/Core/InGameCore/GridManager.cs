@@ -292,7 +292,7 @@ namespace YEONJI.Kindergarten
             ZoneType.PlayRoom => new Color(1f, 0.8f, 0.4f, 0.4f),
             ZoneType.SleepRoom => new Color(1f, 0.5f, 0.7f, 0.4f),
             ZoneType.DiningRoom => new Color(0.5f, 1f, 0.5f, 0.4f),
-            ZoneType.Enterance => new Color(1f, 1f, 1f, 0.6f),
+            ZoneType.Entrance => new Color(1f, 1f, 1f, 0.6f),
             ZoneType.WallPaper => new Color(1f, 0f, 0f, 0.4f),
             _ => Color.clear,
         };

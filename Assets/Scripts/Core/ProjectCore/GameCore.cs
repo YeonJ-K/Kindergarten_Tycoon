@@ -13,7 +13,7 @@ namespace YEONJI.Kindergarten
         [Header("Base Managers")] 
         public List<BaseManager> managerList;
         private Dictionary<Type, BaseManager> managerDict = new Dictionary<Type, BaseManager>();
-
+        public float InitProgress { get; private set; }
         public static UIManager UI { get => Instance.Get<UIManager>(); }
         public static DataManager DATA { get => Instance.Get<DataManager>(); }
         public static SoundManager SOUND { get => Instance.Get<SoundManager>(); }
@@ -42,8 +42,8 @@ namespace YEONJI.Kindergarten
 
             managerDict.Clear();
             // 로딩하기
-            // CanvasRoot.instance.SetLoadingIsOn(true);
-            // CanvasRoot.instance.SetLoadingGaugeText(0);
+            CanvasRoot.instance.SetLoadingIsOn(true);
+            CanvasRoot.instance.SetLoadingGaugeText(0);
             float gauge = 0;
 
             for (int i = 0; i < managerList.Count; i++)
@@ -53,27 +53,17 @@ namespace YEONJI.Kindergarten
                 var type = managerList[i].GetType();
                 managerDict.Add(type, managerList[i]);
 
-                gauge += 5;
-                //CanvasRoot.instance.SetLoadingGaugeText(gauge);
+                gauge = (float)(i + 1) / managerList.Count * 50f;
+                CanvasRoot.instance.SetLoadingGaugeText(gauge);
             }
-
-            await UniTask.Delay(500);
-            //CanvasRoot.instance.SetLoadingGaugeText(70);
+            
 
             // StaticGameData.Init();
             for (int i = 0; i < managerList.Count; i++)
                 managerList[i].Init();
-
-            await UniTask.Delay(500);
-            //CanvasRoot.instance.SetLoadingGaugeText(100);
-
+            
             await UniTask.Delay(250);
-            //UI.board.SetBoardOn(true);
-            await UniTask.Delay(250);
-            //UI.board.SetBoardOn(false);
 
-            await UniTask.Delay(500);
-            //CanvasRoot.instance.SetLoadingIsOn(false);
 
             isCoreReady = true;
 

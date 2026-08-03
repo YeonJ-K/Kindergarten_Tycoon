@@ -3,21 +3,28 @@ using UnityEngine;
 
 namespace YEONJI.Kindergarten
 {
-    public class GameRoundUI : MonoBehaviour
+    public class GameRoundUI : UIBase
     {
+        public override UIType UIType { get { return UIType.GameRoundUI; } }
+        [SerializeField] private GameObject mainRoom;
+        [SerializeField] private GameObject overView;
         public bool IsStatusOpen { get; private set; }
         MainRoomUI mainRoomUI;
 
         private KidAgent selectedKid;
 
+        
         private void Awake()
         {
-            mainRoomUI = gameObject.transform.GetChild(0).gameObject.GetComponent<MainRoomUI>(); 
+            mainRoomUI = mainRoom.GetComponent<MainRoomUI>(); 
         }
 
-        private void Start()
+        public override void OpenUI()
         {
+            base.OpenUI();
             IsStatusOpen = false;
+            mainRoom.SetActive(true);
+            overView.SetActive(false);
             mainRoomUI.InitUI();
         }
 
@@ -77,6 +84,25 @@ namespace YEONJI.Kindergarten
                 IsStatusOpen = false;
                 mainRoomUI.StatusBoxSliding(IsStatusOpen);
             }
+        }
+
+        public void ClickLeftButton()
+        {
+            if (!InGameCore.ROUND.roundStart)
+                return;
+            overView.SetActive(true);
+            mainRoom.SetActive(false);
+            InGameCore.VIEWER.GoOverview();
+        }
+
+        public void ClickRightButton()
+        {
+            if (!InGameCore.ROUND.roundStart)
+                return;
+            overView.SetActive(false);
+            mainRoom.SetActive(true);
+            InGameCore.VIEWER.GoMainRoom();
+
         }
 
         public void ClickToiletButton()

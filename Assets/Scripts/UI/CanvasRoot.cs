@@ -12,6 +12,7 @@ namespace YEONJI.Kindergarten
         [Header("UI Canvas Parents")] 
         public Transform trScreenParent;
         public Transform trHudParent;
+        public Transform trHighLightParent;
         public Transform trPopupParent;
 
         [Header("UI Loading")]
@@ -23,7 +24,7 @@ namespace YEONJI.Kindergarten
         private void Awake()
         {
             instance = this;
-            loadingText = "Loading {0}%";
+            loadingText = "Loading {0:0}%";
         }
         
         //  ----- Set
@@ -31,7 +32,6 @@ namespace YEONJI.Kindergarten
 
         public void SetLoadingGaugeText(float gauge)
         {
-            // 슬라이더.fillAmount = gauge / 100f;
             txtGauge.text = string.Format(loadingText, gauge);
         }
 

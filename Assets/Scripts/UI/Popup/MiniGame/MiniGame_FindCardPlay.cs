@@ -14,6 +14,7 @@ namespace YEONJI.Kindergarten
     public class MiniGame_FindCardPlay : UIBase
     {
         public override UIType UIType { get => UIType.MiniGame_FindCardPlay; }
+        
         [Header("Main")] [SerializeField] private GameObject startBox;
         [SerializeField] private GameObject explainBox;
         [SerializeField] private GameObject gameBox;
@@ -58,11 +59,6 @@ namespace YEONJI.Kindergarten
         [SerializeField] private TextMeshProUGUI resultPlayerScoreTxt;
         private int rewardMoney;
 
-        protected override void OnAwake()
-        {
-            base.OnAwake();
-        }
-
         public void Init()
         {
             flipCard = 0;
@@ -81,17 +77,7 @@ namespace YEONJI.Kindergarten
             answerCards = new List<MiniGame_Card>();
             selectedCards = new List<MiniGame_Card>();
             rememberCards = new HashSet<MiniGame_Card>();
-        }
-
-        public override void OpenUI()
-        {
-            base.OpenUI();
-        }
-
-        public override void CloseUI()
-        {
-            base.CloseUI();
-        }
+        } 
 
         void Start()
         {

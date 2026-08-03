@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace YEONJI.Kindergarten
 {
-    public class MiniGame_HibiscusPlay : MonoBehaviour
+    public class MiniGame_HibiscusPlay : UIBase
     {
         [SerializeField] private GameObject startBox;
         [SerializeField] private GameObject explainBox;
@@ -34,6 +34,7 @@ namespace YEONJI.Kindergarten
         [SerializeField] private TextMeshProUGUI resultExplainTxt;
         private int rewardMoney;
         
+        public override UIType UIType { get { return UIType.MiniGame_HibiscusPlay; } }
         private void Awake()
         {
             // 임시

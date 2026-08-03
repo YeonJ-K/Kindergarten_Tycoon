@@ -1028,6 +1028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23dbfc55d41cc6940b9eb7531bb4db0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FindCardPlay
+  sortOrder: 3000
   startBox: {fileID: 7675240616181585220}
   explainBox: {fileID: 4172912885110347653}
   gameBox: {fileID: 6459309527033286856}

@@ -25,7 +25,7 @@ namespace YEONJI.Kindergarten
             cam = Camera.main;
             animator = GetComponent<Animator>();
             sortingGroup = GetComponent<SortingGroup>();
-            roundUI = GameObject.FindGameObjectWithTag("UI").GetComponent<GameRoundUI>();
+            roundUI = GameCore.UI.OpenUI<GameRoundUI>(UIType.GameRoundUI);
             moveTime = 0.5f;
         }
 
@@ -53,6 +53,14 @@ namespace YEONJI.Kindergarten
                 if (kid != null)
                 {
                     kid.GotCaught();
+
+                    if (IsAdjacent(currentCell, kid.CurrentCell))
+                    {
+                        FaceToward(kid.CurrentCell);
+                        roundUI.OpenStatusBox(kid);
+                        return;
+                    }
+
                     if (FindAdjacentCell(kid.CurrentCell, out Vector2Int adj))
                     {
                         var kidsOccupied = InGameCore.KIDS.GetOccupied();
@@ -64,7 +72,7 @@ namespace YEONJI.Kindergarten
                         }
                     }
 
-                    roundUI.OpenStatusBox(kid);
+
                     return;
                 }
 
@@ -101,6 +109,14 @@ namespace YEONJI.Kindergarten
                 if (kid != null)
                 {
                     kid.GotCaught();
+
+                    if (IsAdjacent(currentCell, kid.CurrentCell))
+                    {
+                        FaceToward(kid.CurrentCell);
+                        roundUI.OpenStatusBox(kid);
+                        return;
+                    }
+
                     if (FindAdjacentCell(kid.CurrentCell, out Vector2Int adj))
                     {
                         var kidsOccupied = InGameCore.KIDS.GetOccupied();
@@ -112,7 +128,7 @@ namespace YEONJI.Kindergarten
                         }
                     }
 
-                    roundUI.OpenStatusBox(kid);
+
                     return;
                 }
 
@@ -213,6 +229,9 @@ namespace YEONJI.Kindergarten
 
             return found;
         }
+        
+        private bool IsAdjacent(Vector2Int a, Vector2Int b)
+            => Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
 
         void FaceToward(Vector2Int targetCell)
         {
@@ -226,6 +245,7 @@ namespace YEONJI.Kindergarten
         {
             yield return StartCoroutine(FollowPath(path));
             FaceToward(kid.CurrentCell);
+            roundUI.OpenStatusBox(kid);
         }
     }
 }

@@ -246,6 +246,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1168944166145971952}
   - component: {fileID: 4683031949278408090}
+  - component: {fileID: 8009896509131267091}
   m_Layer: 0
   m_Name: Loading
   m_TagString: Untagged
@@ -286,6 +287,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d46ea982268fe843bbfc65fb39bc38c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingUI
+  sortOrder: 3000
+  loadingText: {fileID: 0}
+--- !u!225 &8009896509131267091
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753146982097625391}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8920441695130777466
 GameObject:
   m_ObjectHideFlags: 0

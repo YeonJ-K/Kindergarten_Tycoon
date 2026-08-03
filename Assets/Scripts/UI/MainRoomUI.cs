@@ -15,7 +15,7 @@ namespace YEONJI.Kindergarten
         private Vector2 onPos = new Vector2(-900, 10);
         private Vector2 offPos = new Vector2(-80, 10);
         private float duration = 0.3f;
-        private string profilePath = "Kids/Profiles/";
+        private string profilePath = "Sprites/Kids/Profiles/";
         private Coroutine slideRoutine;
         
         [Header("Status Slider")]

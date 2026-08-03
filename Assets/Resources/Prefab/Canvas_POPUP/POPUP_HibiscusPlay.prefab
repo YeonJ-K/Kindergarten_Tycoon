@@ -2758,6 +2758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c3c24426684ac419705b943aef229b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HibiscusPlay
+  sortOrder: 3000
   startBox: {fileID: 8992597191069792399}
   explainBox: {fileID: 1940691866798228363}
   gameBox: {fileID: 6824668090691396476}

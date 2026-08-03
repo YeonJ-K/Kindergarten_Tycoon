@@ -29,12 +29,28 @@ namespace YEONJI.Kindergarten
     {
         None,
         
-        [UIAttrType("Popup/MiniGame/MiniGame_FindCardPlay")]
+        [UIAttrType("Prefab/Canvas_POPUP/POPUP_FindCard")]
         MiniGame_FindCardPlay,
-        [UIAttrType("Popup/MiniGame/MiniGame_HibiscusPlay")]
+        [UIAttrType("Prefab/Canvas_POPUP/POPUP_HibiscusPlay")]
         MiniGame_HibiscusPlay,
-        [UIAttrType("UI/LoadingUI")]
+        [UIAttrType("Prefab/Canvas_POPUP/POPUP_RoundAlert")]
+        RoundAlert,
+        [UIAttrType("Prefab/Canvas_POPUP/POPUP_ErrorMessage")]
+        ErrorMessage,
+        [UIAttrType("Prefab/Canvas_Screen/MainUI")]
+        MainUI,
+        [UIAttrType("Prefab/Canvas_Screen/GameRoundUI")]
+        GameRoundUI,
+        [UIAttrType("Prefab/Canvas_HUD/GameStatusUI")]
+        GameStatusUI,
+        [UIAttrType("Prefab/Canvas_Screen/EditUI")]
+        EditUI,
+        [UIAttrType("Prefab/Canvas_Screen/LoadingUI")]
         LoadingUI,
+        [UIAttrType("Prefab/Canvas_POPUP/POPUP_ResultUI")]
+        ResultUI,
+        [UIAttrType("Prefab/Canvas_POPUP/BuyFurnitureUI")]
+        BuyFurnitureUI,
     }
     
     public enum Canvas_SortOrder
@@ -42,6 +58,7 @@ namespace YEONJI.Kindergarten
         [EnumName("화면")] SCREEN = 1000,
         [EnumName("허드")] HUD = 2000,
         [EnumName("팝업")] POPUP = 3000,
+        [EnumName("하이라이트")] HIGHLIGHT = 5000,
     }
 
     public enum StateEnterPopupType
@@ -81,13 +98,13 @@ namespace YEONJI.Kindergarten
     {
         None = -1,
         [EnumName("Player_m(Clone)")] Male = 0,
-        [EnumName("Player_m(Clone)")] Female = 1
+        [EnumName("Player_w(Clone)")] Female = 1
     }
     
     public enum ZoneType
     {
         None,
-        Enterance,
+        Entrance,
         MainRoom,
         RestRoom,
         PlayRoom,

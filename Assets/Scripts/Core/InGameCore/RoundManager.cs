@@ -11,6 +11,7 @@ namespace YEONJI.Kindergarten
     public class RoundManager : BaseManager
     {
         [SerializeField] private GameObject[] playerPrefab; // 나중에 데이터 시트로 가져오기?
+        
 
         private Vector2Int playerSpawn;
         public Vector2Int kidsSpawnPos { get; private set; }
@@ -31,11 +32,6 @@ namespace YEONJI.Kindergarten
         public bool isWin { get; private set; }
         public KidAgent miniGameKid { get; private set; }
 
-        public override async UniTask Task_Init()
-        {
-            await base.Task_Init();
-        }
-
         public override void Init()
         {
             MiniGameMoney = 0;
@@ -54,7 +50,7 @@ namespace YEONJI.Kindergarten
             enterDuration = 15;
             exitDuration = 15;
             roundFinishTime = 180;
-            roundPerKids = 3;
+            roundPerKids = 5;
             // -----
         }
         
@@ -77,6 +73,7 @@ namespace YEONJI.Kindergarten
 
         public void StartRound()
         {
+            if (roundStart) return;
             StartCoroutine(RoundRoutine());
         }
 
@@ -87,10 +84,19 @@ namespace YEONJI.Kindergarten
 
             yield return StartCoroutine(Entering());
 
-            yield return new WaitForSeconds(roundFinishTime);
+            GameStatusUI statusUI = GameCore.UI.GetUI<GameStatusUI>(UIType.GameStatusUI);
+            float roundTimer = 0f;
+            while (roundTimer < roundFinishTime)
+            {
+                roundTimer += Time.deltaTime;
+                statusUI.SetRoundTime(roundTimer, roundFinishTime);
+                yield return null;
+            }
+
             Debug.Log("퇴장 시작");
             roundStart = false;
             InGameCore.AI.ExitAll();
+            
         }
 
         private void SpawnPlayer()
@@ -102,10 +108,10 @@ namespace YEONJI.Kindergarten
 
         private void SetKidsSpawnPos()
         {
-            InGameCore.GRID.GetZoneBounds(ZoneType.Enterance, out var min, out var max);
+            InGameCore.GRID.GetZoneBounds(ZoneType.Entrance, out var min, out var max);
             int x = (min.x + max.x) / 2;
             int y = max.y;
-            if (InGameCore.GRID.GetCell(x, y).zone != ZoneType.Enterance) return;
+            if (InGameCore.GRID.GetCell(x, y).zone != ZoneType.Entrance) return;
             kidsSpawnPos = new Vector2Int(x, y);
         }
 
@@ -159,7 +165,13 @@ namespace YEONJI.Kindergarten
             }
 
             roundStart = true;
+            GameStatusUI statusUI = GameCore.UI.OpenUI<GameStatusUI>(UIType.GameStatusUI);
+            // 임시 (0말고 JSON 통해 불러온 값을 넣어야 함)
+            statusUI.Init(0);
+            POPUP_RoundAlert roundAlert = GameCore.UI.OpenUI<POPUP_RoundAlert>(UIType.RoundAlert);
+            roundAlert.StartRound();
             InGameCore.VIEWER.SwitchTo(ViewMode.MainRoom);
+            
         }
 
         public void IncreaseStress() => StressCount++;

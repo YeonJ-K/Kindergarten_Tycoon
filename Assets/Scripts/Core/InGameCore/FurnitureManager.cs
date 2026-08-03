@@ -74,7 +74,6 @@ namespace YEONJI.Kindergarten
                 for (int i = 0; i < data.usingPos.Count; i++)
                 {
                     Vector2Int abs = anchor + data.usingPos[i];
-                    Debug.Log($"사용위치 절대: {abs}, 월드: {InGameCore.GRID.GridToWorld(abs.x, abs.y)}");
                 }
             }
         }

@@ -10,10 +10,12 @@ namespace YEONJI.Kindergarten
         private Transform trUIScreen;
         private Transform trUIPopup;
         private Transform trUIHud;
+        private Transform trUIHighLight;
 
         private RectTransform rectUIScreen;
         private RectTransform rectUIPopup;
         private RectTransform rectUIHud;
+        private RectTransform rectUIHighLight;
 
         private Camera mainCamera;
 
@@ -33,13 +35,13 @@ namespace YEONJI.Kindergarten
                 // CanvasRoot를 찾을 수 없습니다. 로깅
             }
 
-            SetTrUIParent(CanvasRoot.instance.trScreenParent, CanvasRoot.instance.trPopupParent, CanvasRoot.instance.trHudParent);
+            SetTrUIParent(CanvasRoot.instance.trScreenParent, CanvasRoot.instance.trPopupParent, CanvasRoot.instance.trHudParent, CanvasRoot.instance.trHighLightParent);
             base.Init();
             
         }
 
         // -------- Set
-        public void SetTrUIParent(Transform trScreen, Transform trPopup, Transform trHud)
+        public void SetTrUIParent(Transform trScreen, Transform trPopup, Transform trHud, Transform trHigh)
         {
             if (trScreen == null || trPopup == null)
             {
@@ -50,10 +52,12 @@ namespace YEONJI.Kindergarten
             trUIScreen = trScreen;
             trUIPopup = trPopup;
             trUIHud = trHud;
+            trUIHighLight = trHigh;
 
             rectUIScreen = trUIScreen.GetComponent<RectTransform>();
             rectUIPopup = trUIPopup.GetComponent<RectTransform>();
             rectUIHud = trUIHud.GetComponent<RectTransform>();
+            rectUIHighLight = trUIHighLight.GetComponent<RectTransform>();
         }
 
         public void SetMainCamera() => mainCamera = Camera.main;
@@ -92,6 +96,8 @@ namespace YEONJI.Kindergarten
                     return trUIScreen;
                 case Canvas_SortOrder.HUD:
                     return trUIHud;
+                case Canvas_SortOrder.HIGHLIGHT:
+                    return trUIHud;
                 default:
                     return null;
             }
@@ -100,6 +106,7 @@ namespace YEONJI.Kindergarten
         public RectTransform GetRectUIScreen() => rectUIScreen;
         public RectTransform GetRectUIPopup() => rectUIPopup;
         public RectTransform GetRectUIHud() => rectUIHud;
+        public RectTransform GetRectUIHighLight() => rectUIHighLight;
 
         // -------- Main 
         public async UniTask OpenUIAsync(UIType uiType, Canvas_SortOrder sortOrder = Canvas_SortOrder.POPUP,
@@ -147,6 +154,7 @@ namespace YEONJI.Kindergarten
             RefreshPopupSortingOrder();
             return openUI as T;
         }
+        
         
         // -------- Logic 
         
