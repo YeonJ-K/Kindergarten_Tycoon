@@ -49,8 +49,12 @@ namespace YEONJI.Kindergarten
         LoadingUI,
         [UIAttrType("Prefab/Canvas_POPUP/POPUP_ResultUI")]
         ResultUI,
-        [UIAttrType("Prefab/Canvas_POPUP/BuyFurnitureUI")]
-        BuyFurnitureUI,
+        [UIAttrType("Prefab/Canvas_POPUP/POPUP_BuyActiveFurniture")]
+        BuyActiveFurnitureUI,
+        [UIAttrType("Prefab/Canvas_POPUP/POPUP_BuyInActiveFurniture")]
+        BuyAInActiveFurnitureUI,
+        [UIAttrType("Prefab/Canvas_HighLight/FurnitureEditUI")]
+        FurnitureEditUI,
     }
     
     public enum Canvas_SortOrder

@@ -27,11 +27,22 @@ namespace YEONJI.Kindergarten
         
         public void CloseLoading(Action action = null)
         {
-            loadingGroup.DOFade(0, 1.5f).OnComplete(() =>
+            // 페이드 시작과 동시에 MainUI를 먼저 열어, 로딩창 뒤에서 바로 드러나게 함
+            OpenMainUI();
+            loadingGroup.DOFade(0, 1f).OnComplete(() =>
             {
-                GameCore.UI.OpenUI<MainUI>(UIType.MainUI);
+                action?.Invoke();
                 CloseUI();
             });
+        }
+
+        private void OpenMainUI()
+        {
+            var mainUI = GameCore.UI.OpenUI<MainUI>(UIType.MainUI, Canvas_SortOrder.SCREEN);
+            if (mainUI == null) return;
+
+            mainUI.SettingPlayerProfileBox(GameCore.DATA.userSex, GameCore.DATA.userName,
+                GameCore.DATA.gameDate, GameCore.DATA.money);
         }
     }
 }

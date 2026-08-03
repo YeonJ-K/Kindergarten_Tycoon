@@ -45,11 +45,11 @@ namespace YEONJI.Kindergarten
             
             for (int i = 0; i < inGameManagers.Count; i++)
                 inGameManagers[i].Init();
-            isGameReady = true;
-            await UniTask.Delay(250);
             CanvasRoot.instance.SetLoadingGaugeText(100);
-            await UniTask.Delay(500);
-            CanvasRoot.instance.SetLoadingIsOn(false);
+            await UniTask.Delay(250);
+
+            // 로딩창 닫기·페이드·MainUI 오픈은 LoadingUI(Loading.prefab)가 담당
+            isGameReady = true;
         }
         
     }

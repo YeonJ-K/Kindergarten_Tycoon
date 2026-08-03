@@ -24,9 +24,20 @@ namespace YEONJI.Kindergarten
         private SaveData saveData = new SaveData();
         
         public FurnitureMetaData Furniture { get; private set; }
+        public MapMetaData Map { get; private set; }
         public string userName => saveData.userName;
         public UserSex userSex => saveData.userSex;
         public int level => saveData.level;
+        public int money => saveData.money;
+        public int gameDate => saveData.gameDate;
+        public IReadOnlyList<int> OwnedFurnitureIds => saveData.ownedFurnitureIds;
+
+        // 가구 구매 시 보유 목록에 추가
+        public void AddOwnedFurniture(int id)
+        {
+            saveData.ownedFurnitureIds.Add(id);
+            Save();
+        }
         
         public override async UniTask Task_Init()
         {
@@ -74,6 +85,10 @@ namespace YEONJI.Kindergarten
             Furniture = new FurnitureMetaData();
             var json = Resources.Load<TextAsset>("Data/FurnitureTable");
             Furniture.Setting(json.text);
+
+            Map = new MapMetaData();
+            var mapJson = Resources.Load<TextAsset>("Data/BasicMapData");
+            Map.Setting(mapJson.text);
         }
 
         public void SetUser(string name, UserSex sex)
@@ -94,6 +109,9 @@ namespace YEONJI.Kindergarten
         public int roomSatisfaction;
         public int level;
         public int levelPerKidsNum;
+        public int money;
+        public int gameDate = 1;   // Day 1부터 시작
+        public List<int> ownedFurnitureIds = new List<int>();   // 보유(인벤토리) 가구 id
 
     }
 }

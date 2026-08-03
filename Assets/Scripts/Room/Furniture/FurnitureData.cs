@@ -33,4 +33,15 @@ namespace YEONJI.Kindergarten
         public ZoneType satisfiedZone;     // 만족도가 적용되는 구역
         public int setId;                  // 0이면 세트 없음
     }
+
+    // SETFurniture 시트 1행 = 세트 하나의 정의
+    [System.Serializable]
+    public class SetFurnitureData
+    {
+        public int setId;
+        public int setFurnitureCount;           // 세트 구성 가구 수
+        public List<int> memberIds = new List<int>();  // 구성 가구 id 목록
+        public int setEffectSatisfaction;       // 세트 완성 시 추가 만족도
+        public ZoneType setZone;                // 세트 효과 적용 구역
+    }
 }

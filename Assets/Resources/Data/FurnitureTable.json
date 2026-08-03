@@ -3,7 +3,7 @@
         {
             "id": 0,
             "type": 0,
-            "furnitureName": "Toilet01",
+            "furnitureName": "파란 화장실 칸",
             "spritePath": "Sprites/Objects/furniture/Toilet01",
             "width": 1,
             "height": 2,
@@ -25,7 +25,7 @@
         {
             "id": 1,
             "type": 0,
-            "furnitureName": "Toilet02",
+            "furnitureName": "노란 화장실 칸",
             "spritePath": "Sprites/Objects/furniture/Toilet02",
             "width": 1,
             "height": 2,
@@ -47,7 +47,7 @@
         {
             "id": 2,
             "type": 0,
-            "furnitureName": "Bedding01",
+            "furnitureName": "곰돌이 이불",
             "spritePath": "Sprites/Objects/furniture/Bedding01",
             "width": 1,
             "height": 3,
@@ -69,7 +69,7 @@
         {
             "id": 3,
             "type": 0,
-            "furnitureName": "Bedding02",
+            "furnitureName": "꿈꾸는 이불",
             "spritePath": "Sprites/Objects/furniture/Bedding02",
             "width": 1,
             "height": 3,
@@ -91,7 +91,7 @@
         {
             "id": 4,
             "type": 0,
-            "furnitureName": "Table01",
+            "furnitureName": "병아리 테이블",
             "spritePath": "Sprites/Objects/furniture/Table01",
             "width": 2,
             "height": 2,
@@ -117,7 +117,7 @@
         {
             "id": 5,
             "type": 0,
-            "furnitureName": "Table02",
+            "furnitureName": "분홍 테이블",
             "spritePath": "Sprites/Objects/furniture/Table02",
             "width": 3,
             "height": 2,
@@ -149,7 +149,7 @@
         {
             "id": 100,
             "type": 1,
-            "furnitureName": "Plant01",
+            "furnitureName": "식물",
             "spritePath": "Sprites/Objects/furniture/Plant01",
             "width": 1,
             "height": 1,
@@ -165,7 +165,7 @@
         {
             "id": 101,
             "type": 1,
-            "furnitureName": "Plant02",
+            "furnitureName": "둥근 식물",
             "spritePath": "Sprites/Objects/furniture/Plant02",
             "width": 1,
             "height": 1,
@@ -181,7 +181,7 @@
         {
             "id": 102,
             "type": 1,
-            "furnitureName": "Crayons",
+            "furnitureName": "그림 세트",
             "spritePath": "Sprites/Objects/furniture/Crayons",
             "width": 1,
             "height": 1,
@@ -197,7 +197,7 @@
         {
             "id": 103,
             "type": 1,
-            "furnitureName": "ShoesStorage",
+            "furnitureName": "신발장",
             "spritePath": "Sprites/Objects/furniture/ShoesStorage",
             "width": 2,
             "height": 1,
@@ -213,7 +213,7 @@
         {
             "id": 104,
             "type": 1,
-            "furnitureName": "Umbrellas",
+            "furnitureName": "우산꽂이",
             "spritePath": "Sprites/Objects/furniture/Umbrellas",
             "width": 1,
             "height": 1,
@@ -229,8 +229,8 @@
         {
             "id": 105,
             "type": 1,
-            "furnitureName": "WhiteBoard",
-            "spritePath": "Sprites/Objects/furniture/WhiteBoard",
+            "furnitureName": "보드판",
+            "spritePath": "Sprites/Objects/furniture/Board",
             "width": 2,
             "height": 1,
             "price": 900,
@@ -245,9 +245,9 @@
         {
             "id": 106,
             "type": 1,
-            "furnitureName": "Storage",
-            "spritePath": "Sprites/Objects/furniture/Storage",
-            "width": 2,
+            "furnitureName": "책꽂이",
+            "spritePath": "Sprites/Objects/furniture/BookShelf",
+            "width": 1,
             "height": 1,
             "price": 1000,
             "spritePlacePos": {
@@ -261,7 +261,7 @@
         {
             "id": 107,
             "type": 1,
-            "furnitureName": "CDPlayer",
+            "furnitureName": "CD 장",
             "spritePath": "Sprites/Objects/furniture/CDPlayer",
             "width": 1,
             "height": 1,
@@ -277,7 +277,7 @@
         {
             "id": 108,
             "type": 1,
-            "furnitureName": "HandWasher",
+            "furnitureName": "화장실 세면대",
             "spritePath": "Sprites/Objects/furniture/HandWasher",
             "width": 2,
             "height": 1,
@@ -293,10 +293,10 @@
         {
             "id": 109,
             "type": 1,
-            "furnitureName": "TowelBox",
+            "furnitureName": "수건 보관함",
             "spritePath": "Sprites/Objects/furniture/TowelBox",
             "width": 1,
-            "height": 1,
+            "height": 2,
             "price": 900,
             "spritePlacePos": {
                 "x": 0,
@@ -309,7 +309,7 @@
         {
             "id": 110,
             "type": 1,
-            "furnitureName": "BathRoomStair",
+            "furnitureName": "발 받침대",
             "spritePath": "Sprites/Objects/furniture/BathRoomStair",
             "width": 1,
             "height": 1,
@@ -325,7 +325,7 @@
         {
             "id": 111,
             "type": 1,
-            "furnitureName": "TrashBox",
+            "furnitureName": "쓰레기통",
             "spritePath": "Sprites/Objects/furniture/TrashBox",
             "width": 1,
             "height": 1,
@@ -341,8 +341,8 @@
         {
             "id": 112,
             "type": 1,
-            "furnitureName": "PaintBook",
-            "spritePath": "Sprites/Objects/furniture/PaintBook",
+            "furnitureName": "장난감 상자",
+            "spritePath": "Sprites/Objects/furniture/ToyBox",
             "width": 1,
             "height": 1,
             "price": 400,
@@ -357,8 +357,8 @@
         {
             "id": 113,
             "type": 1,
-            "furnitureName": "Blocks",
-            "spritePath": "Sprites/Objects/furniture/Blocks",
+            "furnitureName": "그림책",
+            "spritePath": "Sprites/Objects/furniture/PaintBook",
             "width": 1,
             "height": 1,
             "price": 600,
@@ -373,7 +373,7 @@
         {
             "id": 114,
             "type": 1,
-            "furnitureName": "TeddyBear",
+            "furnitureName": "곰돌이 인형",
             "spritePath": "Sprites/Objects/furniture/TeddyBear",
             "width": 1,
             "height": 1,
@@ -389,10 +389,10 @@
         {
             "id": 115,
             "type": 1,
-            "furnitureName": "Light",
+            "furnitureName": "전등",
             "spritePath": "Sprites/Objects/furniture/Light",
             "width": 1,
-            "height": 1,
+            "height": 2,
             "price": 700,
             "spritePlacePos": {
                 "x": 0,
@@ -405,7 +405,7 @@
         {
             "id": 116,
             "type": 1,
-            "furnitureName": "Water",
+            "furnitureName": "정수기",
             "spritePath": "Sprites/Objects/furniture/Water",
             "width": 1,
             "height": 1,
@@ -421,10 +421,10 @@
         {
             "id": 117,
             "type": 1,
-            "furnitureName": "Refrige",
+            "furnitureName": "냉장고",
             "spritePath": "Sprites/Objects/furniture/Refrige",
             "width": 1,
-            "height": 1,
+            "height": 2,
             "price": 1200,
             "spritePlacePos": {
                 "x": 0,
@@ -437,7 +437,7 @@
         {
             "id": 118,
             "type": 1,
-            "furnitureName": "Counter",
+            "furnitureName": "카운터",
             "spritePath": "Sprites/Objects/furniture/Counter",
             "width": 2,
             "height": 1,
@@ -453,7 +453,7 @@
         {
             "id": 119,
             "type": 1,
-            "furnitureName": "Sink",
+            "furnitureName": "싱크대",
             "spritePath": "Sprites/Objects/furniture/Sink",
             "width": 2,
             "height": 1,
@@ -465,22 +465,51 @@
             "satisfaction": 3,
             "satisfiedZone": 6,
             "setId": 4
+        }
+    ],
+    "sets": [
+        {
+            "setId": 1,
+            "setFurnitureCount": 2,
+            "memberIds": [
+                103,
+                104
+            ],
+            "setEffectSatisfaction": 2,
+            "setZone": 1
         },
         {
-            "id": 999,
-            "type": 1,
-            "furnitureName": "EnterRug",
-            "spritePath": "Sprites/Objects/furniture/EnterRug",
-            "width": 1,
-            "height": 1,
-            "price": 0,
-            "spritePlacePos": {
-                "x": 0,
-                "y": 0
-            },
-            "satisfaction": 0,
-            "satisfiedZone": 0,
-            "setId": 0
+            "setId": 2,
+            "setFurnitureCount": 3,
+            "memberIds": [
+                108,
+                109,
+                110
+            ],
+            "setEffectSatisfaction": 4,
+            "setZone": 3
+        },
+        {
+            "setId": 3,
+            "setFurnitureCount": 3,
+            "memberIds": [
+                112,
+                113,
+                114
+            ],
+            "setEffectSatisfaction": 5,
+            "setZone": 4
+        },
+        {
+            "setId": 4,
+            "setFurnitureCount": 3,
+            "memberIds": [
+                117,
+                118,
+                119
+            ],
+            "setEffectSatisfaction": 7,
+            "setZone": 6
         }
     ]
 }

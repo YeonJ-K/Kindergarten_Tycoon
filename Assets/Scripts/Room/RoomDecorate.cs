@@ -10,19 +10,18 @@ namespace YEONJI.Kindergarten
 
         public void Init()
         {
-            if (theme == null)
-                return;
-
             foreach (var zoneRect in InGameCore.GRID.presetZones)
             {
+                Sprite sprite = Resources.Load<Sprite>(zoneRect.floorSpriteName);
+                if (sprite == null) continue;
+
                 for (int x = zoneRect.x; x < zoneRect.x + zoneRect.width; x++)
                 {
                     for (int y = zoneRect.y; y < zoneRect.y + zoneRect.height; y++)
                     {
-                        if (InGameCore.GRID.GetCell(x, y).zone != zoneRect.type) continue;
-                        GameObject go = new GameObject();
+                        GameObject go = new GameObject("Floor");
                         var sr = go.AddComponent<SpriteRenderer>();
-                        sr.sprite = theme.GetRoomSprite(zoneRect.type);
+                        sr.sprite = sprite;
                         sr.sortingOrder = 0;
                         go.transform.position = InGameCore.GRID.GridToWorld(x, y);
                     }

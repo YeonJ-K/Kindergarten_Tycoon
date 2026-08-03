@@ -20,7 +20,7 @@ namespace YEONJI.Kindergarten
                 "FurnitureTable", out var colMap);
             if (sheet == null) return;
 
-            var table = new FurnitureMetaData.FurnitureTableJson { actives = new(), inactives = new() };
+            var table = new FurnitureMetaData.FurnitureTableJson { actives = new(), inactives = new(), sets = new() };
 
             for (int r = 1; r < sheet.Rows.Count; r++)
             {
@@ -41,7 +41,49 @@ namespace YEONJI.Kindergarten
 
             }
 
+            ParseSetSheet(table.sets);
+
             WriteJson(table, "Assets/Resources/Data/FurnitureTable.json");
+        }
+
+        private void ParseSetSheet(List<SetFurnitureData> sets)
+        {
+            var sheet = OpenSheet("Assets/DataTable/Kindergarten_Tycoon.xlsx",
+                "SETFurniture", out var colMap);
+            if (sheet == null) return;
+
+            for (int r = 1; r < sheet.Rows.Count; r++)
+            {
+                DataRow row = sheet.Rows[r];
+                if (string.IsNullOrWhiteSpace(Cell(row, colMap, "setId"))) continue;
+
+                try
+                {
+                    var set = new SetFurnitureData
+                    {
+                        setId                 = ParseInt(Cell(row, colMap, "setId")),
+                        setFurnitureCount     = ParseInt(Cell(row, colMap, "SetFurnitureCount")),
+                        setEffectSatisfaction = ParseInt(Cell(row, colMap, "SETEffectSatisfaction")),
+                        setZone               = ParseZoneType(Cell(row, colMap, "SETZone")),
+                    };
+
+                    AddMemberId(set.memberIds, Cell(row, colMap, "FurnitureItemId01"));
+                    AddMemberId(set.memberIds, Cell(row, colMap, "FurnitureItemId02"));
+                    AddMemberId(set.memberIds, Cell(row, colMap, "FurnitureItemId03"));
+
+                    sets.Add(set);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"SETFurniture {r + 1}행 파싱 실패 (setId={Cell(row, colMap, "setId")}): {e.Message}");
+                }
+            }
+        }
+
+        private void AddMemberId(List<int> list, string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return;
+            list.Add(ParseInt(raw));
         }
 
         private void FillCommon(FurnitureData data, DataRow row, Dictionary<string, int> colMap)

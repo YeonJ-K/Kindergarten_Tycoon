@@ -124,7 +124,13 @@ namespace YEONJI.Kindergarten
                 if (sr != null) sr.color = color;
             }
         }
-        
+
+        public void SetFurnitureAlpha(float alpha)
+        {
+            furnitureSprite.color = new Color(1f,1f,1f,alpha);
+        }
+
+
         public List<Vector2Int> GetOccupiedCells()
         {
             List<Vector2Int> cells = new List<Vector2Int>();

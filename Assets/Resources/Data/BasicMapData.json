@@ -1,0 +1,88 @@
+{
+    "zones": [
+        {
+            "zone": 7,
+            "hasDoor": false,
+            "door": { "x": 0, "y": 0 },
+            "startX": 0,
+            "startY": 7,
+            "width": 15,
+            "height": 2,
+            "floorSpriteName": "Sprites/Objects/Room/WallPaper",
+            "hasActiveFurniture": false,
+            "furnitureCount": 0
+        },
+        {
+            "zone": 1,
+            "hasDoor": true,
+            "door": { "x": 3, "y": 4 },
+            "startX": 0,
+            "startY": 3,
+            "width": 3,
+            "height": 4,
+            "floorSpriteName": "Sprites/Objects/Room/EnteranceTile",
+            "hasActiveFurniture": false,
+            "furnitureCount": 0
+        },
+        {
+            "zone": 2,
+            "hasDoor": false,
+            "door": { "x": 0, "y": 0 },
+            "startX": 3,
+            "startY": 3,
+            "width": 9,
+            "height": 4,
+            "floorSpriteName": "Sprites/Objects/Room/MainRoomTile",
+            "hasActiveFurniture": false,
+            "furnitureCount": 0
+        },
+        {
+            "zone": 3,
+            "hasDoor": true,
+            "door": { "x": 4, "y": 3 },
+            "startX": 0,
+            "startY": 0,
+            "width": 5,
+            "height": 3,
+            "floorSpriteName": "Sprites/Objects/Room/RestRoomTile",
+            "hasActiveFurniture": true,
+            "furnitureCount": 1
+        },
+        {
+            "zone": 5,
+            "hasDoor": true,
+            "door": { "x": 7, "y": 3 },
+            "startX": 5,
+            "startY": 0,
+            "width": 5,
+            "height": 3,
+            "floorSpriteName": "Sprites/Objects/Room/SleepRoomTile",
+            "hasActiveFurniture": true,
+            "furnitureCount": 2
+        },
+        {
+            "zone": 6,
+            "hasDoor": true,
+            "door": { "x": 10, "y": 3 },
+            "startX": 10,
+            "startY": 0,
+            "width": 5,
+            "height": 3,
+            "floorSpriteName": "Sprites/Objects/Room/DiningRoomTile",
+            "hasActiveFurniture": true,
+            "furnitureCount": 1
+        },
+        {
+            "zone": 4,
+            "hasDoor": true,
+            "door": { "x": 11, "y": 5 },
+            "startX": 12,
+            "startY": 3,
+            "width": 3,
+            "height": 4,
+            "floorSpriteName": "Sprites/Objects/Room/PlayRoomTile",
+            "hasActiveFurniture": false,
+            "furnitureCount": 0
+        }
+    ]
+}

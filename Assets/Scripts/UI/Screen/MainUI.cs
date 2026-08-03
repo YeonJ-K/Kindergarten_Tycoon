@@ -31,7 +31,7 @@ namespace YEONJI.Kindergarten
 
         public void ClickEditButton()
         {
-            //GameCore.UI.OpenUI(UIType.EditUI);
+            GameCore.UI.OpenUI<EditUI>(UIType.EditUI);
             CloseUI();
         }
 

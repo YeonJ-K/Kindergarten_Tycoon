@@ -986,7 +986,7 @@ GameObject:
   - component: {fileID: 1009492193840044555}
   - component: {fileID: 1193331713093652781}
   m_Layer: 0
-  m_Name: POPUP_FindCard
+  m_Name: FindCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

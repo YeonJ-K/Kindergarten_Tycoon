@@ -64,6 +64,14 @@ namespace YEONJI.Kindergarten
             return (int)ParseFloat(s, fallback);
         }
 
+        protected bool ParseBool(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return false;
+            s = s.Trim();
+            if (bool.TryParse(s, out var b)) return b;   // "True"/"False"
+            return s == "1";                              // "1"/"0"
+        }
+
         protected float ParseFloat(string s, float fallback = 0f)
         {
             if (string.IsNullOrWhiteSpace(s)) return fallback;

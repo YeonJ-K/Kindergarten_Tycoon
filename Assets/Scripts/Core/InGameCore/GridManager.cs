@@ -21,17 +21,19 @@ namespace YEONJI.Kindergarten
         public Vector2Int door;
         public int x, y;
         public int width = 3, height = 3;
+        public string floorSpriteName;
     }
 
     public class GridManager : BaseManager
     {
-        [Header("맵 크기")] 
-        public int mapWidth = 11; // 추후에 값은 데이터 시트로 받아온다.
+        [Header("맵 크기")]
+        // BasicMapData 시트(존 범위)에서 자동 계산됨. 아래 값은 에디터 기즈모용 기본값.
+        public int mapWidth = 11;
         public int mapHeight = 7;
         public float cellSize = 1f;
 
-        [Header("Sections")] 
-        public List<ZoneRect> presetZones = new();
+        // 런타임에 BasicMapData에서 채움 (인스펙터 하드코딩 제거)
+        [System.NonSerialized] public List<ZoneRect> presetZones = new();
         private GridCell[,] cells;
         private HashSet<(Vector2Int, Vector2Int)> doorPairs = new();
         private HashSet<Vector2Int> doors = new();
@@ -53,12 +55,43 @@ namespace YEONJI.Kindergarten
 
         public override void Init()
         {
+            LoadMapData();
             BuildGrid();
             BuildDoorPairs();
             wallBuilder.Init();
             roomDecorate.Init();
             camFilter.Init();
             base.Init();
+        }
+
+        // BasicMapData(엑셀)에서 맵 크기와 구역 목록을 채운다
+        private void LoadMapData()
+        {
+            var map = GameCore.DATA.Map;
+            if (map == null || map.Zones == null)
+            {
+                Debug.LogError("[GridManager] 맵 데이터 없음");
+                return;
+            }
+
+            mapWidth = map.MapWidth;
+            mapHeight = map.MapHeight;
+
+            presetZones = new List<ZoneRect>();
+            foreach (var z in map.Zones)
+            {
+                presetZones.Add(new ZoneRect
+                {
+                    type = z.zone,
+                    hasDoor = z.hasDoor,
+                    door = z.door,
+                    x = z.startX,
+                    y = z.startY,
+                    width = z.width,
+                    height = z.height,
+                    floorSpriteName = z.floorSpriteName,
+                });
+            }
         }
 
         private void BuildGrid()

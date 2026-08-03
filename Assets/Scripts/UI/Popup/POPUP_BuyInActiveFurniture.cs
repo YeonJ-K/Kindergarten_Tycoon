@@ -1,12 +1,13 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace YEONJI.Kindergarten
 {
-    public class POPUP_BuyFurniture : UIBase
+    public class POPUP_BuyInActiveFurniture : UIBase
     {
-        public override UIType UIType { get { return UIType.BuyFurnitureUI;  } }
+        public override UIType UIType { get { return UIType.BuyAInActiveFurnitureUI;  } }
 
         [SerializeField] private TextMeshProUGUI furnitureNameTxt;
         [SerializeField] private TextMeshProUGUI furniturePriceTxt;
@@ -21,6 +22,7 @@ namespace YEONJI.Kindergarten
 
         public void SettingFurniture(string name, int price, int satisfaction, string spritePath, ZoneType zone)
         {
+            SETFurniture.SetActive(false);
             furnitureNameTxt.text = name;
             furniturePriceTxt.text = price.ToString();
             furnitureSatisfactionTxt.text = satisfaction.ToString();
@@ -49,7 +51,13 @@ namespace YEONJI.Kindergarten
                     furnitureZoneTxt.text = "식당";
                     break;
             }
-            
+        }
+
+        public void SettingSetFurniture(List<string> setFurniture, int setSatisfaction)
+        {
+            SETFurniture.SetActive(true);
+            SETFurnitureListTxt.text = string.Join(", ", setFurniture);
+            SETsatisfactionTxt.text = setSatisfaction.ToString();
         }
 
         public void ClickBuyFurniture()
